@@ -20,8 +20,8 @@ public class StockDefinitions {
         stock1.modifyAmount(doses);
     }
 
-    @Then("the stocks should contain {int} doses of chocolates")
-    public void the_stocks_should_contain_doses_of_chocolates(Integer number) {
+    @Then("the stock should contain {int} doses of chocolates")
+    public void the_stock_should_contain_doses_of_chocolates(Integer number) {
        assertEquals(number, stock1.getAmount());
     }
 

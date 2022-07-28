@@ -50,7 +50,7 @@ public class StoreDefinitions {
         store.addIngredientsToStock(new Ingredient("almond",0), almondAmount);
     }
 
-    @When("{int} ingredients of name chocolate are added to the stock")
+    @When("the manager adds {int} ingredients of name chocolate")
     public void ingredients_of_name_chocolate_are_added_to_the_stock(Integer chocolateAmount) {
     try {
         store.addIngredientsToStock(new Ingredient("chocolate", 0), chocolateAmount);
@@ -58,7 +58,7 @@ public class StoreDefinitions {
         exception = e;
     }
     }
-    @When("the demand for {int} ingredients of name chocolate")
+    @When("user asks the {int} of ingredients of name chocolate")
     public void the_demand_for_ingredients_of_name_chocolate(Integer amount) {
         items = new ArrayList<>();
         items.add((new Item(chocolate,amount)));
@@ -95,7 +95,7 @@ public class StoreDefinitions {
     }
 
 
-    @When("store update is asked with this list of items")
+    @When("the manager asks store update with this list of items")
     public void update_is_asked_with_this_list_of_items() {
         updated = store.update(items);
     }
