@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unice.polytech.cf</groupId>
-    <artifactId>demo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>fr.unice.polytech.cf</groupId> <!-- CHANGE ME -->
+    <artifactId>demo</artifactId> <!-- CHANGE ME -->
+    <version>1.0-SNAPSHOT</version> <!-- CHANGE ME -->
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <cucumber.version>7.4.1</cucumber.version>
-        <junit.jupiter.version>5.9.0</junit.jupiter.version>
-    </properties>
-
+        <junit.jupiter.version>5.8.0</junit.jupiter.version>
+        <cucumber.version>7.0.0-RC1</cucumber.version>
+   </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>${junit.jupiter.version}</version>
+                <version>5.9.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -34,9 +31,9 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
-
 
     <dependencies>
         <dependency>
@@ -44,32 +41,23 @@
             <artifactId>cucumber-java</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <!--        <dependency>
+                    <groupId>io.cucumber</groupId>
+                    <artifactId>cucumber-java</artifactId>
+                    <version>7.0.0</version>
+                    <scope>test</scope>
+                </dependency>-->
         <dependency>
             <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit</artifactId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.6.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mashape.unirest</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>1.4.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
-            <version>3.10.8</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-client-java</artifactId>
-            <version>3.10.8</version>
+        <dependency> <!-- Junit 5 vintage to JUnit 4 necessary for Cucumber 4.X + Junit 5.X -->
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -81,6 +69,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -88,7 +77,6 @@
 
     <build>
         <plugins>
-            <!-- JUnit 5 requires Surefire version 2.22.2 / compiler 3.8.1 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -114,47 +102,6 @@
                     </properties>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.6.0.1398</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.4</version>
-            </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.4</version>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
-
 </project>
