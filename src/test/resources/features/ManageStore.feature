@@ -55,7 +55,7 @@ Feature: Manage Stocks of Stores
     And a list of items of <amount> chocolate, strawberry and almond
     When store update is asked with this list of items
     Then the updates return false
-    Then the store contains <chocolate_topping> chocolate topping, <strawberry_flavour> strawberry flavour, <almond_dough> almond dough
+    And the store contains <chocolate_topping> chocolate topping, <strawberry_flavour> strawberry flavour, <almond_dough> almond dough
 
 
     Examples:
