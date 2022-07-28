@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StoreDefs {
+public class StoreDefinitions {
 
     Store store;
     Ingredient chocolate = new Ingredient("chocolate",0);

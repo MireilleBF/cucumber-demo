@@ -6,7 +6,7 @@ import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StockDefs {
+public class StockDefinitions {
 
     Stock stock1;
     boolean accepted;
