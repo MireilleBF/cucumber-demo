@@ -1,11 +1,12 @@
 ---
 name: User Story
 about: Describe the User Story
-title: '[US]'
-labels: US
+title: "[US]"
+labels: bug, US
 assignees: ''
 
 ---
+
 >Choisissez entre Français et Anglais pour décrire l'issue et tenez-vous à une seule langue. 
 >Adaptez le patron des "US" en fonction de vos choix (il se trouve dans votre dépôt sous _.github/ISSUE_TEMPLATE_
 
