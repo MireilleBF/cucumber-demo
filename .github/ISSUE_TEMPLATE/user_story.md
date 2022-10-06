@@ -85,6 +85,12 @@ _**Scénario:**_<br>
 Précisez à terme le fichier correspondant aux tests de validation associés (Gherkin). 
 
 
+:sparkles: **References**
+Placez ici les issues associées telles que 
+- Tasks : #2, #...
+- Duplicate : #26
+
+
 ## Legende 
 - :star:  Requis 
 - :star2: Requis avant le passage en développement ou de la placer dans un milestone.
