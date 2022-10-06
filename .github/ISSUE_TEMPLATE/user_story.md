@@ -87,7 +87,7 @@ Précisez à terme le fichier correspondant aux tests de validation associés (G
 
 ## Legende 
 - :star:  Requis 
-- :star2: Requis avant le passage en développement.
+- :star2: Requis avant le passage en développement
 - :sparkles: Un plus
 
 > Ce texte et ces exemples s'inspirent de  : https://blog.myagilepartner.fr/index.php/2017/03/18/story-a4/
