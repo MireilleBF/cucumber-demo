@@ -31,7 +31,7 @@ Proposition d'échelle, la [méthode MoSCoW](https://paper-leaf.com/insights/pri
 Ce point est estimé avec la méthode vue en cours.
 
 
-:sparkles: **Règle métier /Business rules :**
+:sparkles: **Règle métier /Business rules (optionnel):**
 Précisez ici les règles métiers essentielles pour le développement de cette user-story. 
 
 Ces règles sont écrites en français ou en anglais avec comme objectif de très facilement comprendre le travail à effectuer. 
@@ -47,6 +47,7 @@ panier.
 ```
   
 :star2: **Critère d'acceptation/Acceptance criteria**
+
 Précisez l'ensemble des conditions que la story doit satisfaire pour être considérée comme complète et terminée.
 
 Plus spécifiquement décrivez un ensemble de scénario qui deviendront des tests d'acceptation. 
@@ -68,6 +69,8 @@ _**Scénario:**_
      _Alors_ mon panier affichera une erreur
 ```
 
+
+
 _**Scénario:**_<br>
 ```
     Etant donné que je suis sur mon panier 
@@ -76,6 +79,12 @@ _**Scénario:**_<br>
     Quand j'ajoute "1" quantité de mon produit
     Alors mon produit aura "2" quantités
 ```
+
+
+:star2: **Acceptation tests**
+Précisez à terme le fichier correspondant aux tests de validation associés (Gherkin). 
+
+
 ## Legende 
 - :star:  Requis 
 - :star2: Requis avant le passage en développement.
