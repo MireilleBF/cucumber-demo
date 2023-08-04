@@ -38,14 +38,14 @@ expected result:
 
 
 :arrow_forward: Two packages are used to organize the tests:
-- One contains tests for stock management and demonstrates the basic usage of PicoContainerwith Cucumber.
-- The other presents a simplified version of a library, [demonstration developped by Philippe Collet](https://github.com/collet/cucumber-demo) 
+- One contains tests for [stock management](./src/test/java/fr/unice/polytech/cf/demo/store/README.md) and demonstrates the basic usage of PicoContainerwith Cucumber
+- The other presents a simplified [version of a library](./src/test/java/fr/unice/polytech/biblio) [demonstration developed by Philippe Collet](https://github.com/collet/cucumber-demo) 
 
 
-:arrow_forward: **Features :** 
-The feature description files (Gherkin files) are accessible under test/resources/features
+:arrow_forward: **Features:** 
+The feature description files (Gherkin files) are accessible under [test/resources/features](./src/test/resources/features)
 
-:arrow_forward: **StepDefs :** The implementations corresponding to the steps are defined under tests and follow the same structure as the files describing the scenarios. They refer to the sources located under main
+:arrow_forward: **StepDefs:** The implementations corresponding to the steps are defined under tests and follow the same structure as the files describing the scenarios. They refer to the sources located under main
 
 ## Enabling Cucumber Support in IntelliJ IDEA
 
