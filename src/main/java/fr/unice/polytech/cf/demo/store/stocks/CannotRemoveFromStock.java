@@ -1,4 +1,4 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stocks;
 
 public class CannotRemoveFromStock extends Throwable {
     public CannotRemoveFromStock(Ingredient ingredient, int amount) {

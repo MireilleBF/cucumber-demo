@@ -1,6 +1,6 @@
-package fr.unice.polytech.cf.demo.store.withPicoContainer;
+package fr.unice.polytech.cf.demo.store.withHistory;
 
-import fr.unice.polytech.cf.demo.store.Stock;
+import fr.unice.polytech.cf.demo.store.stocks.Stock;
 
 public class StockContainer {
     Stock stock;

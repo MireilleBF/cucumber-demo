@@ -1,11 +1,12 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stores;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import fr.unice.polytech.cf.demo.store.stocks.CannotRemoveFromStock;
+import fr.unice.polytech.cf.demo.store.stocks.Ingredient;
+import fr.unice.polytech.cf.demo.store.stocks.Stock;
+
+
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Inspired from group e in 20-21
@@ -18,13 +19,19 @@ public class Store {
     private String name;
     private LocalTime openingTime;
     private LocalTime closeTime;
-    Map<Ingredient, Stock> stocks;
 
+    private int revenue;
+    Map<Ingredient, Stock> stocks = new HashMap<>();
+
+    private Ingredient findIngredient(String name) {
+        if (stocks.keySet().isEmpty()) return new Ingredient(name, 0);
+        return stocks.keySet().stream().filter(ingredient -> ingredient.getName().equals(name)).findFirst().orElse(null);
+    }
 
     /**
      * Simple store constructor
      *
-     * @param name         the store's name
+     * @param name         the store's getDescription
      * @param pOpeningTime store opening time
      * @param pCloseTime   store closing time
      */
@@ -117,6 +124,10 @@ public class Store {
         }
     }
 
+    public void addIngredientsToStock(String ingredientName, int amount) {
+        Ingredient ingredient = this.findIngredient(ingredientName);
+       addIngredientsToStock(ingredient, amount);
+    }
 
     /**
      * Remove an amount of Ingredients from a stock.
@@ -151,7 +162,7 @@ public class Store {
      * Count the quantity of each ingredient and check if the
      * stocks provide enough ingredients.
      *
-     * @param pItems the list of <code>Item</code>to check
+     * @param pItems the list of <code>Purchase</code>to check
      * @return true if the stocks provide enough ingredients
      * false if not
      */
@@ -163,18 +174,27 @@ public class Store {
         return true;
     }
 
-    public boolean update(List<Item> pItems) {
+    public boolean update(List<Item> pItems) throws CannotRemoveFromStock {
         if (!hasEnoughIngredientsFor(pItems)) {
             return false;
         }
         for (Item item : pItems) {
-            try {
                 removeIngredientsFromStock(item.getIngredient(), item.getAmount());
-            } catch (CannotRemoveFromStock e) {
-                throw new RuntimeException("unexcepted" +  e);
-            }
         }
         return true;
+    }
+
+    public void sell(Integer number, String ingredient, Integer price) throws CannotRemoveFromStock {
+        removeIngredientsFromStock(findIngredient(ingredient), number);
+        revenue += price;
+    }
+
+    public Optional<Stock> getStock(String ingredient) {
+        return getStockByIngredient(findIngredient(ingredient));
+    }
+
+    public int getRevenue() {
+        return revenue;
     }
 }
 

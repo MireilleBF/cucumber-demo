@@ -1,7 +1,6 @@
-package fr.unice.polytech.cf.demo.store.withPicoContainer;
+package fr.unice.polytech.cf.demo.store.withHistory;
 
-import fr.unice.polytech.cf.demo.store.Ingredient;
-import fr.unice.polytech.cf.demo.store.Stock;
+import fr.unice.polytech.cf.demo.store.stocks.Stock;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 public class StockProcess {
     StockContainer stockContainer;
+
     Stock currentStock;
 
     public StockProcess(StockContainer stockContainer) {
@@ -26,7 +26,7 @@ public class StockProcess {
 
     @Given("the stock already constains {int} doses of {string}")
     public void the_stock_already_constains_doses_of_ingredients(Integer number, String ingredient) {
-        stockContainer.setStock(new Stock(new Ingredient(ingredient,0), number));
+        stockContainer.setStock(new Stock(ingredient, number));
         currentStock = stockContainer.getStock();
     }
 
@@ -59,6 +59,7 @@ public class StockProcess {
     public void the_withdrawal_is_refused(String ingredient) {
         assertFalse(accepted);
     }
+
 
 
 }

@@ -1,6 +1,7 @@
-package fr.unice.polytech.cf.demo.store.withPicoContainer;
+package fr.unice.polytech.cf.demo.store.withHistory;
 
-import fr.unice.polytech.cf.demo.store.Stock;
+import fr.unice.polytech.cf.demo.store.stocks.Stock;
+
 import io.cucumber.java.en.Then;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -20,7 +20,10 @@ public class RunCucumberTest { // will run all features found on the classpath
 */
 @Suite
 @IncludeEngines("cucumber")
+
+//Specifies the location of the feature files. The feature files are stored in the "features/biblio" directory within the classpath.
 @SelectClasspathResource("features/biblio")
+
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "fr.unice.polytech.biblio")
 

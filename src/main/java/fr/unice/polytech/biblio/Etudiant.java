@@ -49,7 +49,7 @@ public class Etudiant {
 	}
 
 	public void rendre(String titreLivre) {
-		List<Collection<Emprunt>> empruntsLoop = List.of(emprunts);
+		//List<Collection<Emprunt>> empruntsLoop = List.of(emprunts);
 		Emprunt toRemove = null;
 		for (Emprunt e : emprunts) {
 			if (e.getLivreEmprunte().equals(titreLivre)){

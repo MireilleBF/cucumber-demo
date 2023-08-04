@@ -1,4 +1,4 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stocks;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,6 +15,7 @@ public class StockDefinition {
 
 
     boolean accepted;
+
     @Given("the stock already constains {int} doses of chocolates")
     public void the_stock_already_constains_doses_of_chocolates(Integer number) {
         stock1 = new Stock(new Ingredient("chocolate",0), number);

@@ -6,8 +6,8 @@ Feature: Manage Stocks of Stores
 
   Scenario Outline: Add ingredient in empty Store
     Given an empty store
-    When the manager adds <amount_delta> ingredients of name chocolate
-    Then there is <final_amount> ingredients of name chocolate  in the stock
+    When the manager adds <amount_delta> doses of chocolate to the store
+    Then the store should contain <final_amount> doses of chocolates
 
     Examples:
    | amount_delta | final_amount|
@@ -17,9 +17,9 @@ Feature: Manage Stocks of Stores
 
 
   Scenario Outline: Add ingredients
-    Given the store contains a stock containing <amount_base> ingredients of name chocolate
-    When the manager adds <amount_delta> ingredients of name chocolate
-    Then there is <final_amount> ingredients of name chocolate  in the stock
+    Given the store contains a stock containing <amount_base> doses of chocolate
+    When the manager adds <amount_delta> doses of chocolate to the store
+    Then there is <final_amount> ingredients of chocolate in the store
 
     Examples:
       |amount_base| amount_delta | final_amount|
@@ -27,10 +27,10 @@ Feature: Manage Stocks of Stores
       |0          |3             |3           |
 
   Scenario Outline: Add  ingredients in one store stock
-    Given the store contains a stock containing <amount_chocolate> ingredients of name chocolate and <amount_strawberry> ingredients of name strawberry
-    When the manager adds <amount_delta> ingredients of name chocolate
-    Then there is <final_amount> ingredients of name chocolate  in the stock
-    Then there is <amount_strawberry> ingredients of name strawberry  in the stock
+    Given the store contains a stock containing <amount_chocolate> ingredients of chocolate and <amount_strawberry> ingredients of strawberry
+    When the manager adds <amount_delta> doses of chocolate to the store
+    Then there is <final_amount> ingredients of chocolate in the store
+    Then there is <amount_strawberry> ingredients of strawberry in the store
 
     Examples:
       |amount_chocolate| amount_delta | final_amount|amount_strawberry|
@@ -66,8 +66,8 @@ Feature: Manage Stocks of Stores
 
 
  Scenario Outline: check items
-    Given the store contains a stock containing <amount_base> ingredients of name chocolate
-    When user asks the <amount_delta> of ingredients of name chocolate
+    Given the store contains a stock containing <amount_base> doses of chocolate
+    When user asks the <amount_delta> doses of chocolate
     Then we expect the system to answer <response>
 
     Examples:
@@ -78,10 +78,10 @@ Feature: Manage Stocks of Stores
 
 
   Scenario Outline: refuse to update stock with negative ingredients
-    Given the store contains a stock containing <amount_base> ingredients of name chocolate
-    When the manager adds <chocolateAmount> ingredients of name chocolate
+    Given the store contains a stock containing <amount_base> doses of chocolate
+    When the manager adds <chocolateAmount> doses of chocolate to the store
     Then an error Amount <chocolateAmount> is less than 0 is raised
-    Then there is <amount_base> ingredients of name chocolate  in the stock
+    Then there is <amount_base> ingredients of chocolate in the store
 
     Examples:
       |amount_base | chocolateAmount |

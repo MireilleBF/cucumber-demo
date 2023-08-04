@@ -5,7 +5,6 @@ import io.cucumber.java.fr.Et;
 import io.cucumber.java.fr.Etantdonné;
 import io.cucumber.java.fr.Quand;
 
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +24,7 @@ public class EmpruntLivreStepdefs { // implements En si vos scénarios sont écr
         etudiant.setNom(nomEtudiant);
         etudiant.setNoEtudiant(noEtudiant);
         biblio.addEtudiant(etudiant);
-    };
+    }
     @Et("un livre de titre {string}")
     public void eUnLivre(String titreLivre) {
         Livre liv = new Livre(biblio);

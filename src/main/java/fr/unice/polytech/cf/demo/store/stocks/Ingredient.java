@@ -1,4 +1,4 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stocks;
 
 import java.util.Objects;
 
@@ -32,7 +32,7 @@ public class Ingredient {
     }
 
     /**
-     * Override of the equals method so that ingredients of the same name and type
+     * Override of the equals method so that ingredients of the same getDescription and type
      * will be considered equals
      *
      * @param obj an Object to test

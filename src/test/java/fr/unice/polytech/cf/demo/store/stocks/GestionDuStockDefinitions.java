@@ -1,4 +1,4 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stocks;
 
 import io.cucumber.java.fr.Alors;
 import io.cucumber.java.fr.Etantdonné;

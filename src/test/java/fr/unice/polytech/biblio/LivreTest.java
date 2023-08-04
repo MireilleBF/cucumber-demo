@@ -6,7 +6,7 @@ package fr.unice.polytech.biblio;
 /**
  * Ph. Collet
  */
-public class LivreTest { // Just pour vérifier que JUnit 5 est bien configuré
+class LivreTest { // Just pour vérifier que JUnit 5 est bien configuré
 
     private Bibliotheque biblio;
     private Livre livre;
@@ -18,7 +18,7 @@ public class LivreTest { // Just pour vérifier que JUnit 5 est bien configuré
     }
 
     @Test
-    public void EtudiantCreated() {
+    void EtudiantCreated() {
 
         assertEquals(false, livre.getEmprunte());
     }

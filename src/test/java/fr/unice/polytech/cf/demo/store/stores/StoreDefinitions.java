@@ -1,5 +1,7 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stores;
 
+import fr.unice.polytech.cf.demo.store.stocks.CannotRemoveFromStock;
+import fr.unice.polytech.cf.demo.store.stocks.Ingredient;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -16,13 +18,14 @@ public class StoreDefinitions {
     Ingredient strawberry = new Ingredient("strawberry",0);
     Ingredient almond = new Ingredient("almond",0);
 
-    Exception exception = null;
+    Exception exception ;
 
     boolean updated;
 
     List<Item> items;
     private boolean result;
 
+    /** GIVEN **/
     @Given("a store of name {string}")
     public void a_store_of_name(String storeName) {
         store = new Store(storeName);
@@ -33,13 +36,13 @@ public class StoreDefinitions {
         store = new Store("empty");
     }
 
-    @Given("the store contains a stock containing {int} ingredients of name chocolate")
+    @Given("the store contains a stock containing {int} doses of chocolate")
     public void the_store_contains_a_stock_containing_ingredients_of_name_chocolate(Integer chocolateAmount) {
         store.addIngredientsToStock(new Ingredient("chocolate",0), chocolateAmount) ;
     }
 
 
-    @Given("the store contains a stock containing {int} ingredients of name chocolate and {int} ingredients of name strawberry")
+    @Given("the store contains a stock containing {int} ingredients of chocolate and {int} ingredients of strawberry")
     public void the_store_contains_a_stock_containing_ingredients_of_name_chocolate_and_ingredients_of_name_strawberry(Integer chocolateAmount, Integer strawberryAmount) {
         store.addIngredientsToStock(new Ingredient("chocolate",0), chocolateAmount) ;
         store.addIngredientsToStock(new Ingredient("strawberry",0), strawberryAmount);
@@ -50,23 +53,25 @@ public class StoreDefinitions {
         store.addIngredientsToStock(new Ingredient("almond",0), almondAmount);
     }
 
-    @When("the manager adds {int} ingredients of name chocolate")
-    public void ingredients_of_name_chocolate_are_added_to_the_stock(Integer chocolateAmount) {
-    try {
-        store.addIngredientsToStock(new Ingredient("chocolate", 0), chocolateAmount);
-    } catch (Exception e){
-        exception = e;
+    /** WHEN **/
+    @When("the manager adds {int} doses of chocolate to the store")
+    public void the_manager_adds_doses_of_chocolate_to_the_store(Integer chocolateAmount) {
+        try {
+            store.addIngredientsToStock(new Ingredient("chocolate", 0), chocolateAmount);
+        } catch (Exception e){
+            exception = e;
+        }
     }
-    }
-    @When("user asks the {int} of ingredients of name chocolate")
+
+    @When("user asks the {int} doses of chocolate")
     public void the_demand_for_ingredients_of_name_chocolate(Integer amount) {
         items = new ArrayList<>();
-        items.add((new Item(chocolate,amount)));
+        items.add(new Item(chocolate,amount));
         result = store.hasEnoughIngredientsFor(items);
     }
 
-    @Then("there is {int} ingredients of name chocolate  in the stock")
-    public void there_is_ingredients_of_name_chocolate_in_the_stock(Integer expectedAmount) {
+    @Then("the store should contain {int} doses of chocolates")
+    public void the_store_should_contain_doses_of_chocolates(Integer expectedAmount) {
         assertEquals(expectedAmount,store.getAmountIngredient(chocolate));
     }
 
@@ -79,11 +84,15 @@ public class StoreDefinitions {
     }
 
 
-    @Then("there is {int} ingredients of name strawberry  in the stock")
+    @Then("there is {int} ingredients of strawberry in the store")
     public void there_is_ingredients_of_name_strawberry_in_the_stock(Integer expectedAmount) {
         assertEquals(expectedAmount,store.getAmountIngredient(strawberry));
     }
 
+    @Then("there is {int} ingredients of chocolate in the store")
+    public void there_is_ingredients_of_name_chocolate_in_the_stock(Integer expectedAmount) {
+        assertEquals(expectedAmount,store.getAmountIngredient(chocolate));
+    }
 
 
     @Given("a list of items of {int} chocolate, strawberry and almond")
@@ -96,7 +105,7 @@ public class StoreDefinitions {
 
 
     @When("the manager asks store update with this list of items")
-    public void update_is_asked_with_this_list_of_items() {
+    public void update_is_asked_with_this_list_of_items() throws CannotRemoveFromStock {
         updated = store.update(items);
     }
 

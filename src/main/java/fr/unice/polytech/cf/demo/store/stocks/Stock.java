@@ -1,4 +1,4 @@
-package fr.unice.polytech.cf.demo.store;
+package fr.unice.polytech.cf.demo.store.stocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,24 +11,34 @@ import java.util.List;
  */
 public class Stock {
 
-    private List<String> history = new ArrayList<String>();
+    //Simplified for the demo
+    private final List<String> actionHistory = new ArrayList<>();
 
     private Ingredient ingredient;
+    public Ingredient getIngredient() {
+        return ingredient;
+    }
+
 
     public int getAmount() {
         return amount;
     }
-
     private int amount;
+
+    public Stock(String ingredient, int amount) {
+        this.ingredient = new Ingredient(ingredient,10);
+        this.amount = amount;
+    }
+
+    public Stock(String ingredient) {
+        this(ingredient,0);
+    }
 
     public Stock(Ingredient ingredient, int amount) {
         this.ingredient = ingredient;
         this.amount = amount;
     }
 
-    public Ingredient getIngredient() {
-        return ingredient;
-    }
 
     /**
      * modify pAmount to the stock.
@@ -47,17 +57,17 @@ public class Stock {
         return true;
     }
 
-    public void modifyAmount(String name, int doses) {
+    public void modifyAmount(String managerName, int doses) {
         if (modifyAmount(doses))
-            history.add(name + " modifies stock : " + doses);
+            actionHistory.add( managerName + " modifies stock : " + doses);
         else
-            history.add(name + " tries to modify stock : " + doses + " but it is refused");
+            actionHistory.add(managerName + " tries to modify stock : " + doses + " but it is refused");
     }
 
     public String getLastStep() {
-        if (history.isEmpty()) {
-            return "Empty history";
+        if (actionHistory.isEmpty()) {
+            return "Empty actionHistory";
         }
-        return history.get(history.size() - 1);
+        return actionHistory.get(actionHistory.size() - 1);
     }
 }
