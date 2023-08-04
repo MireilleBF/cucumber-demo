@@ -6,9 +6,14 @@ import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StockDefinitions {
-
+/**
+ * Step definitions for stocks.feature
+ * We choose to deal with the stock as a whole
+ */
+public class StockDefinition {
     Stock stock1;
+
+
     boolean accepted;
     @Given("the stock already constains {int} doses of chocolates")
     public void the_stock_already_constains_doses_of_chocolates(Integer number) {
@@ -18,6 +23,12 @@ public class StockDefinitions {
     @When("the manager adds {int} doses of chocolates")
     public void the_manager_adds_doses_of_chocolates(Integer doses) {
         stock1.modifyAmount(doses);
+    }
+
+
+    @When("the manager {string} adds {int} doses of chocolates")
+    public void the_manager_adds_doses_of_chocolates(String name, Integer doses) {
+        stock1.modifyAmount(name,doses);
     }
 
     @Then("the stock should contain {int} doses of chocolates")
@@ -34,5 +45,6 @@ public class StockDefinitions {
     public void the_withdrawal_is_refused() {
         assertFalse(accepted);
     }
+
 
 }

@@ -1,5 +1,8 @@
 package fr.unice.polytech.cf.demo.store;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Inspired from group e in 20-21
  *
@@ -7,6 +10,9 @@ package fr.unice.polytech.cf.demo.store;
  * @version %I% %G%
  */
 public class Stock {
+
+    private List<String> history = new ArrayList<String>();
+
     private Ingredient ingredient;
 
     public int getAmount() {
@@ -39,5 +45,19 @@ public class Stock {
         }
         amount = newAmount;
         return true;
+    }
+
+    public void modifyAmount(String name, int doses) {
+        if (modifyAmount(doses))
+            history.add(name + " modifies stock : " + doses);
+        else
+            history.add(name + " tries to modify stock : " + doses + " but it is refused");
+    }
+
+    public String getLastStep() {
+        if (history.isEmpty()) {
+            return "Empty history";
+        }
+        return history.get(history.size() - 1);
     }
 }

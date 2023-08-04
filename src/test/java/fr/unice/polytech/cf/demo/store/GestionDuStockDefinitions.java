@@ -20,6 +20,7 @@ public class GestionDuStockDefinitions {
         stock.modifyAmount(doses);
     }
 
+
     @Alors("le stock  contient {int} doses de chocolats")
     @Alors("le stock contient {int} doses de chocolats")
     public void le_stock_contient_doses_de_chocolats(Integer number) {
