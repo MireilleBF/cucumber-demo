@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StockHistoryProcess {
 
-    private StockContainer stockContainer;
+    private final StockContainer stockContainer;
     public StockHistoryProcess(StockContainer stockContainer) {
         this.stockContainer = stockContainer;
     }

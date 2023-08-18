@@ -8,28 +8,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GestionDuStockDefinitions {
 
-    Stock stock;
+    StockInterface stockInterface;
     boolean accepted;
     @Etantdonné("un stock contenant {int} doses de chocolats")
     public void un_stock_contenant_doses_de_chocolats(Integer number) {
-        stock = new Stock(new Ingredient("chocolate",0), number);
+        stockInterface = new Stock(new Ingredient("chocolate",0), number);
     }
 
     @Quand("le gestionnaire ajoute {int} doses de chocolats")
     public void le_gestionnaire_ajoute_doses_de_chocolats(Integer doses) {
-        stock.modifyAmount(doses);
+        stockInterface.modifyAmount(doses);
     }
 
 
     @Alors("le stock  contient {int} doses de chocolats")
     @Alors("le stock contient {int} doses de chocolats")
     public void le_stock_contient_doses_de_chocolats(Integer number) {
-        assertEquals(number, stock.getAmount());
+        assertEquals(number, stockInterface.getAmount());
     }
 
     @Quand("le gestionnaire demande à retirer {int} doses of chocolates")
     public void le_gestionnaire_demande_à_retirer_doses_of_chocolates(Integer doses) {
-        accepted = stock.modifyAmount(-doses);
+        accepted = stockInterface.modifyAmount(-doses);
     }
 
     @Alors("le retrait est refusé")

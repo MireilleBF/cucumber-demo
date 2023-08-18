@@ -7,11 +7,6 @@ record Item (Ingredient ingredient, int amount) {
         return amount;
     }
 
-    public Item(Ingredient ingredient, int amount) {
-        this.ingredient = ingredient;
-        this.amount = amount;
-    }
-
     public Ingredient getIngredient() {
         return ingredient;
     }

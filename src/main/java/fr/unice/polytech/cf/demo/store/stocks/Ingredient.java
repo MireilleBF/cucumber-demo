@@ -4,7 +4,9 @@ import java.util.Objects;
 
 /**
  * Inspired from group e in 20-21
- *
+ * Represents an ingredient in the store
+ * An ingredient has a name and a price
+ * <p>
  * @author Mireille Blay
  * @version %I% %G%
  */
@@ -32,8 +34,8 @@ public class Ingredient {
     }
 
     /**
-     * Override of the equals method so that ingredients of the same getDescription and type
-     * will be considered equals
+     * Override of the equals method so that ingredients
+     * with the same getDescription and type will be considered equals
      *
      * @param obj an Object to test
      * @return true if objects are equals
@@ -41,8 +43,8 @@ public class Ingredient {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (!(obj instanceof Ingredient)) return false;
+        if (obj == this) { return true ;}
+        if (!(obj instanceof Ingredient)) { return false;}
         Ingredient ingredient = (Ingredient) obj;
         return ingredient.name.equals(name) && ingredient.price == price;
     }

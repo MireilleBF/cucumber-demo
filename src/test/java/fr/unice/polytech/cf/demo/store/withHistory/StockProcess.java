@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 public class StockProcess {
     StockContainer stockContainer;
-
+    boolean accepted;
     Stock currentStock;
 
     public StockProcess(StockContainer stockContainer) {
@@ -22,10 +22,10 @@ public class StockProcess {
         currentStock = stockContainer.getStock();
     }
 
-    boolean accepted;
 
-    @Given("the stock already constains {int} doses of {string}")
-    public void the_stock_already_constains_doses_of_ingredients(Integer number, String ingredient) {
+
+    @Given("the stock already contains {int} doses of {string}")
+    public void the_stock_already_contains_doses_of_ingredients(Integer number, String ingredient) {
         stockContainer.setStock(new Stock(ingredient, number));
         currentStock = stockContainer.getStock();
     }

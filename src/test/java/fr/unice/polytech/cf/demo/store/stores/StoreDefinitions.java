@@ -13,10 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class StoreDefinitions {
 
+    public static final String CHOCOLATE = "chocolate";
+    public static final String STRAWBERRY = "strawberry";
+    public static final String ALMOND = "almond";
     Store store;
-    Ingredient chocolate = new Ingredient("chocolate",0);
-    Ingredient strawberry = new Ingredient("strawberry",0);
-    Ingredient almond = new Ingredient("almond",0);
+    Ingredient chocolate = new Ingredient(CHOCOLATE,0);
+    Ingredient strawberry = new Ingredient(STRAWBERRY,0);
+    Ingredient almond = new Ingredient(ALMOND,0);
 
     Exception exception ;
 
@@ -38,26 +41,26 @@ public class StoreDefinitions {
 
     @Given("the store contains a stock containing {int} doses of chocolate")
     public void the_store_contains_a_stock_containing_ingredients_of_name_chocolate(Integer chocolateAmount) {
-        store.addIngredientsToStock(new Ingredient("chocolate",0), chocolateAmount) ;
+        store.addIngredientsToStock(new Ingredient(CHOCOLATE,0), chocolateAmount) ;
     }
 
 
     @Given("the store contains a stock containing {int} ingredients of chocolate and {int} ingredients of strawberry")
     public void the_store_contains_a_stock_containing_ingredients_of_name_chocolate_and_ingredients_of_name_strawberry(Integer chocolateAmount, Integer strawberryAmount) {
-        store.addIngredientsToStock(new Ingredient("chocolate",0), chocolateAmount) ;
-        store.addIngredientsToStock(new Ingredient("strawberry",0), strawberryAmount);
+        store.addIngredientsToStock(new Ingredient(CHOCOLATE,0), chocolateAmount) ;
+        store.addIngredientsToStock(new Ingredient(STRAWBERRY,0), strawberryAmount);
     }
     @Given("the store stock contains {int} chocolate topping, {int} strawberry flavour, {int} almond dough")
     public void the_store_stock_contains_chocolate_topping_strawberry_flavour_almond_dough(Integer chocolateAmount, Integer strawberryAmount,Integer almondAmount) {
         the_store_contains_a_stock_containing_ingredients_of_name_chocolate_and_ingredients_of_name_strawberry(chocolateAmount,strawberryAmount);
-        store.addIngredientsToStock(new Ingredient("almond",0), almondAmount);
+        store.addIngredientsToStock(new Ingredient(ALMOND,0), almondAmount);
     }
 
     /** WHEN **/
     @When("the manager adds {int} doses of chocolate to the store")
     public void the_manager_adds_doses_of_chocolate_to_the_store(Integer chocolateAmount) {
         try {
-            store.addIngredientsToStock(new Ingredient("chocolate", 0), chocolateAmount);
+            store.addIngredientsToStock(new Ingredient(CHOCOLATE, 0), chocolateAmount);
         } catch (Exception e){
             exception = e;
         }

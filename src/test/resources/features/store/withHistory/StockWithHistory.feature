@@ -1,19 +1,19 @@
 Feature: Stock managment with History
 
 Scenario: removing ingredients to a stock and checking the history
-Given the stock already constains 30 doses of "chocolates"
+Given the stock already contains 30 doses of "chocolates"
     When the manager "John" adds 15 doses of "chocolates"
     Then the stock should contain 45 doses of "chocolates"
     Then the last entry in the history should be "John modifies stock : 15"
 
   Scenario: removing ingredients to a stock and checking the history
-    Given the stock already constains 30 doses of "chocolates"
+    Given the stock already contains 30 doses of "chocolates"
     When the manager "John" removes 10 doses of "chocolates"
     Then the stock should contain 20 doses of "chocolates"
     Then the last entry in the history should be "John modifies stock : -10"
 
   Scenario Outline: adding ingredients to a stock and checking the history
-    Given the stock already constains 30 doses of <ingredient_name>
+    Given the stock already contains 30 doses of <ingredient_name>
     When the manager <name> adds <amount_delta> doses of <ingredient_name>
     Then the stock should contain <final_amount> doses of <ingredient_name>
     And the last entry in the history should be <log_message>

@@ -3,25 +3,27 @@ package fr.unice.polytech.cf.demo.store.stores;
 import fr.unice.polytech.cf.demo.store.stocks.CannotRemoveFromStock;
 import fr.unice.polytech.cf.demo.store.stocks.Ingredient;
 import fr.unice.polytech.cf.demo.store.stocks.Stock;
+import fr.unice.polytech.cf.demo.store.stocks.StockInterface;
 
 
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Inspired from group e in 20-21
+ * A store is a place where you can buy items according to the stocks.
  *
  * @author Mireille Blay
  * @version %I% %G%
  */
-public class Store {
+public class Store  extends SimpleStore{
 
-    private String name;
     private LocalTime openingTime;
     private LocalTime closeTime;
 
-    private int revenue;
-    Map<Ingredient, Stock> stocks = new HashMap<>();
+    // STOCKS OF THE STORE, one by ingredient
+    Map<Ingredient, StockInterface> stocks = new ConcurrentHashMap<>();
 
     private Ingredient findIngredient(String name) {
         if (stocks.keySet().isEmpty()) return new Ingredient(name, 0);
@@ -36,15 +38,21 @@ public class Store {
      * @param pCloseTime   store closing time
      */
     public Store(String name, LocalTime pOpeningTime, LocalTime pCloseTime) {
-        this.name = name;
+        super(name);
         this.stocks = new HashMap<>();
         this.openingTime = pOpeningTime;
         this.closeTime = pCloseTime;
     }
 
+
+    public Store (){
+        this("Store", LocalTime.of(8, 00), LocalTime.of(20, 00));
+    }
+
     public Store(String name) {
         this(name, LocalTime.of(8, 00), LocalTime.of(20, 00));
     }
+
 
 
     //-----------------------GETTER------------------------------------
@@ -54,10 +62,6 @@ public class Store {
 
     public LocalTime getCloseTime() {
         return closeTime;
-    }
-
-    public String getName() {
-        return name;
     }
 
 
@@ -78,16 +82,16 @@ public class Store {
      * @param ingredient the wanted ingredient
      * @return the stock containing the ingredient
      */
-    Optional<Stock> getStockByIngredient(Ingredient ingredient) {
+    public Optional<StockInterface> getStockByIngredient(Ingredient ingredient) {
         return Optional.ofNullable(stocks.get(ingredient));
     }
 
 
     public int getAmountIngredient(Ingredient ingredient) {
-        Optional<Stock> stockWithIngredient = getStockByIngredient(ingredient);
-        if (stockWithIngredient.isPresent()) {
-            return stockWithIngredient.get().getAmount();
-        } else return 0;
+        Optional<StockInterface> stock = getStockByIngredient(ingredient);
+        if (stock.isPresent()) {
+            return stock.get().getAmount();
+        } else {return 0;}
     }
 
 
@@ -100,9 +104,9 @@ public class Store {
      * <code>false</code> otherwise
      **/
     private boolean changeAmount(Ingredient ingredient, int amount) {
-        Optional<Stock> stockWithIngredient = getStockByIngredient(ingredient);
-        if (stockWithIngredient.isPresent()) {
-            return stockWithIngredient.get().modifyAmount(amount);
+        Optional<StockInterface> stock = getStockByIngredient(ingredient);
+        if (stock.isPresent()) {
+            return stock.get().modifyAmount(amount);
         } else return false;
     }
 
@@ -126,7 +130,7 @@ public class Store {
 
     public void addIngredientsToStock(String ingredientName, int amount) {
         Ingredient ingredient = this.findIngredient(ingredientName);
-       addIngredientsToStock(ingredient, amount);
+         addIngredientsToStock(ingredient, amount);
     }
 
     /**
@@ -137,8 +141,8 @@ public class Store {
      * @param amount     the quantity to remove
      **/
     public void removeIngredientsFromStock(Ingredient ingredient, int amount) throws CannotRemoveFromStock {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Amount [" + amount + "] is less or equal to 0");
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount [" + amount + "] is less than 0");
         }
         if (!changeAmount(ingredient, -amount))
             throw new CannotRemoveFromStock(ingredient, amount);
@@ -166,7 +170,7 @@ public class Store {
      * @return true if the stocks provide enough ingredients
      * false if not
      */
-    boolean hasEnoughIngredientsFor(List<Item> pItems) {
+    public boolean hasEnoughIngredientsFor(List<Item> pItems) {
         for (Item item : pItems) {
             if (getAmountIngredient(item.getIngredient()) < item.getAmount())
                 return false;
@@ -183,18 +187,29 @@ public class Store {
         }
         return true;
     }
-
-    public void sell(Integer number, String ingredient, Integer price) throws CannotRemoveFromStock {
-        removeIngredientsFromStock(findIngredient(ingredient), number);
-        revenue += price;
-    }
-
-    public Optional<Stock> getStock(String ingredient) {
+    public Optional<StockInterface> getStock(String ingredient) {
         return getStockByIngredient(findIngredient(ingredient));
     }
 
-    public int getRevenue() {
-        return revenue;
+    //-----------------------Manage sales------------------------------------
+
+    public void sell(Integer number, String ingredient, Integer price) throws CannotRemoveFromStock {
+        removeIngredientsFromStock(findIngredient(ingredient), number);
+        super.sell(number + " of " + ingredient, price);
     }
+
+    @Override
+    public void sell(String description, int price){
+        try {
+            sell(0, description, price);
+        } catch (CannotRemoveFromStock e) {
+            //TODO: handle exception properly
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+
 }
 

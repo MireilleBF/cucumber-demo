@@ -7,7 +7,9 @@ import io.cucumber.java.en.When;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Only to make the difference with simple junit tests
+ * To test the customer part of the purchasing system
+ * Here, we don't deal here with the DAOs,
+ * we just test the customer behavior olone
  */
 public class CustomerDefinition {
 

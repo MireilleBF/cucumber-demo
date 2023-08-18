@@ -7,14 +7,15 @@ import io.cucumber.java.en.When;
 
 public class PurchaseProcess {
 
-    private PurchaseContainer purchaseContainer;
+    private final PurchaseContainer purchaseContainer;
 
+    //The purchaseContainer is automatically injected by Cucumber
     public PurchaseProcess(PurchaseContainer purchaseContainer) {
         this.purchaseContainer = purchaseContainer;
     }
     @Given("customer {string} is already registered")
     public void customer_is_already_registered(String string) {
-        //We don't manage the registration of the customer in this demo
+        //We don't manage the registration of the customer in this part of the demo
         purchaseContainer.customer = new Customer(string);
     }
     @Given("the store {string} contains a stock containing {int} ingredients of name {string}")

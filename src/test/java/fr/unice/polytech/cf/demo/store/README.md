@@ -11,6 +11,10 @@
 ## Under _withHistory_: first use of containers. 
 We want to verify the stock history but do not want to define the history tests in the same context as the stocks.
 
+## Under _centralsystem_: use of explicit containers and dependency injection
+
+We use a facade to manage purchases simply by interacting between the purchasing store and the customer through a central system. For this, we use DAOs to represent knowledge that could be in Databases (customers and stores) and dependency injection to link these classes.
+
 **Features** : _StockWithHistory.features_ defines simple tests that include verification of stock actions.
 **Implementations** :The steps are defined in both _StockProcess_ and _StockHistoryProcess_. 
 To enable them to share the processed stock, we use a "container" that holds the stock. It is automatically created by the environment and establishes a link between the two classes of step tests.
