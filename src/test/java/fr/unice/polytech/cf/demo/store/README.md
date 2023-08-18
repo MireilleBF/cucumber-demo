@@ -15,6 +15,14 @@ We want to verify the stock history but do not want to define the history tests 
 
 We use a facade to manage purchases simply by interacting between the purchasing store and the customer through a central system. For this, we use DAOs to represent knowledge that could be in Databases (customers and stores) and dependency injection to link these classes.
 
+_CustomerManager_ uses Constructor Injection : CustomerManage gets all its dependencies via its constructor (_CustomerDAO_).
+
+Similarly, _StoreManager_ uses Field Injection: StoreManager gets its dependencies via @Inject annotation (_StoreDAO_).
+
+_EcoSystemDefinition_ uses Constructor Injection using a container to share the central system between the steps.
+
+Test classes are defined, don't use cucumber, and explicit the use of containers.
+
 **Features** : _StockWithHistory.features_ defines simple tests that include verification of stock actions.
 **Implementations** :The steps are defined in both _StockProcess_ and _StockHistoryProcess_. 
 To enable them to share the processed stock, we use a "container" that holds the stock. It is automatically created by the environment and establishes a link between the two classes of step tests.
