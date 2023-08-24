@@ -12,7 +12,7 @@ public class CustomerManager implements CustomerManagerInterface {
         this.customerDAO = customerDAO;
     }
     @Override
-    public Optional<Customer> getCustomer(String name) {
+    public Optional<Customer> findCustomer(String name) {
         return customerDAO.get(name);
     }
 

@@ -6,6 +6,7 @@ In this GitHub repository, you will find example code to help you understand how
 - cucumber-picocontainer 7.8
 - Maven compatible
 - JDK 17
+- Mockito 4.8
 - Gherkin and stepDefs FR and EN (integrate _Examples_)
 - Github Actions (See in .github/workflows) to simply make a maven+test compilation
 

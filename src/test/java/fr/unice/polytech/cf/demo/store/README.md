@@ -38,3 +38,6 @@ the use of a shared object (_PurchaseContainer_), we can handle our concerns sep
 - _Purchasing.feature_ links the store, the customer, etc.
 It defines a PurchaseContainer that will contain the customer, the store, and the purchase itself.
 CustomerHistoryProcess, PurchaseProcess, and StoreProcess use this intermediate object.
+
+## Under _payment_: MOCKITO and Dependency Injection
+Under _test_ part of _payment_, we use of a container, dependency injection and integration tests  to simulate an external payment service.
