@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class EcoSystemDefinition {
 
-    EcoSystemManager ecoSystemManager;
+    private EcoSystemManager ecoSystemManager;
 
-    Exception exception;
+    private Exception exception;
     public EcoSystemDefinition(FacadeContainer container) {
         ecoSystemManager = container.ecoSystemManager;
     }

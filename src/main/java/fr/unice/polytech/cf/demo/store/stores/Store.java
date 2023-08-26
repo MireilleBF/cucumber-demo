@@ -23,7 +23,7 @@ public class Store  extends SimpleStore{
     private LocalTime closeTime;
 
     // STOCKS OF THE STORE, one by ingredient
-    Map<Ingredient, StockInterface> stocks = new ConcurrentHashMap<>();
+    private Map<Ingredient, StockInterface> stocks = new ConcurrentHashMap<>();
 
     private Ingredient findIngredient(String name) {
         if (stocks.keySet().isEmpty()) return new Ingredient(name, 0);
@@ -208,8 +208,13 @@ public class Store  extends SimpleStore{
         }
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return super.toString() + " {" +
+                "openingTime=" + openingTime +
+                ", closeTime=" + closeTime +
+                ", stocks=" + stocks +
+                "} " ;
+    }
 }
 

@@ -47,4 +47,8 @@ public class Customer implements NamedObject {
         return history.stream().filter(purchase -> purchase.getDescription().equals(description)).findFirst().orElse(null);
     }
 
+    @Override
+    public String toString() {
+        return "Customer{" + "name='" + name + '\'' + ", history=" + history + '}';
+    }
 }

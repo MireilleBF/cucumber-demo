@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class CustomerDefinition {
 
-    Customer customer;
+    private Customer customer;
 
 
     @When("a customer {string} asks to be created")

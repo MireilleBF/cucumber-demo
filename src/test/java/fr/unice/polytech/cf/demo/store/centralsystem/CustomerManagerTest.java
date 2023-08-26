@@ -24,13 +24,14 @@ class CustomerManagerTest {
 
     @Test
     void getCustomerTest() {
-        Optional<Customer> x = customerManager.findCustomer("John");
+        String john = "John";
+        Optional<Customer> x = customerManager.findCustomer(john);
         assertFalse(x.isPresent());
-        customerManager.registerCustomer("John");
+        customerManager.registerCustomer(john);
         x = customerManager.findCustomer("John");
         assertTrue(x.isPresent());
         customerManager.registerCustomer("Jane");
-        x = customerManager.findCustomer("John");
+        x = customerManager.findCustomer(john);
         assertTrue(x.isPresent());
         x = customerManager.findCustomer("Jane");
         assertTrue(x.isPresent());

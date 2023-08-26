@@ -43,6 +43,12 @@ public class SimpleStore implements StoreInterface {
         return revenue;
     }
 
-
+    @Override
+    public String toString() {
+        return "Store{" +
+                "name='" + name + '\'' +
+                ", revenue=" + revenue +
+                '}';
+    }
 }
 

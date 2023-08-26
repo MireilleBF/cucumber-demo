@@ -1,7 +1,6 @@
 package fr.unice.polytech.cf.demo.store.centralsystem;
 
 import fr.unice.polytech.cf.demo.store.stores.StoreDAO;
-import fr.unice.polytech.cf.demo.store.stores.StoreInterface;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.picocontainer.DefaultPicoContainer;

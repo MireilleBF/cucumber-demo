@@ -21,8 +21,7 @@ import static org.mockito.Mockito.*;
  * to mock dependencies
  * and to use Picontainer to inject dependencies
  */
-
-public class PaymentTest {
+ class PaymentTest {
 
     /**
      * This is not a test, we only use it to show how to use mockito

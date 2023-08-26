@@ -5,6 +5,7 @@ import fr.unice.polytech.cf.demo.store.purchasing.Customer;
 import fr.unice.polytech.cf.demo.store.purchasing.Purchase;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,29 +17,41 @@ public class OrderManager {
         return orders.get(ident);
     }
 
-    public record Order(Customer customer, Purchase p, String paymentIdentifier){
+    public record Order(Customer customer, Purchase p, String paymentIdentifier) {
     }
 
-    private Map<String,Order> orders = new ConcurrentHashMap<>();
+    private Map<String, Order> orders = new ConcurrentHashMap<>();
     private PaymentSystem paymentSystem;
     private CustomerManager customerManager;
-    public OrderManager(PaymentSystem paymentSystem, CustomerManager customerManager){
+
+    public OrderManager(PaymentSystem paymentSystem, CustomerManager customerManager) {
         this.paymentSystem = paymentSystem;
         this.customerManager = customerManager;
     }
 
 
-    public void registerOrder(double amount, String customerName, Purchase purchase) {
-        customerManager.findCustomer(customerName).ifPresent(customer -> {
-            String ident = paymentSystem.registerPayment(amount, customerName);
+    /**
+     * This method creates an order for a customer and a purchase if the payment is valid
+     *
+     * @param amount
+     * @param customerName
+     * @param purchase
+     * @return the payment identifier associated to the order
+     */
+    public String registerOrder(double amount, String customerName, Purchase purchase) {
+        Optional<Customer> customerOpt = customerManager.findCustomer(customerName);
+        String ident = "";
+        if (customerOpt.isPresent()) {
+            ident = paymentSystem.registerPayment(amount, customerName);
             if (paymentSystem.isPaymentValid(ident)) {
-                registerOrder(customer, ident, purchase);
+                registerOrder(customerOpt.get(), ident, purchase);
             }
-        });
+        }
+        return ident;
     }
 
     private void registerOrder(Customer customer, String payment, Purchase purchase) {
-        orders.put(payment,new Order(customer,purchase,payment));
+        orders.put(payment, new Order(customer, purchase, payment));
     }
 
 

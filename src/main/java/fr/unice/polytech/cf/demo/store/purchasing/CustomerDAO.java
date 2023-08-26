@@ -8,8 +8,6 @@ public class CustomerDAO extends fr.unice.polytech.cf.demo.store.SimplifiedDAO<C
 
     public CustomerDAO() {
             super();
-            save(new Customer("Custom 1"));
-            save(new Customer("Custom 2"));
         }
 
 }
