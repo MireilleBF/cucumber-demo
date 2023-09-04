@@ -51,7 +51,7 @@ public class EcoSystemManager {
         StoreInterface store = storeOpt.get();
         sell(customer, purchaseSescription, store, price);
     }
-    public void sell(Customer customer, String purchaseSescription, StoreInterface store, int price) {
+    private void sell(Customer customer, String purchaseSescription, StoreInterface store, int price) {
         Purchase item = new Purchase(purchaseSescription, price);
         store.sell(purchaseSescription, price);
         customer.purchase(item);

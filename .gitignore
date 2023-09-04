@@ -58,3 +58,5 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 pomTER.xml
+*.vpp
+*.vpp.bak_*
