@@ -1,17 +1,17 @@
 # Cucumber-demo: Example Code for Cucumber Tests
 
-In this GitHub repository, you will find example code to help you understand how to use Cucumber for testing.
+This GitHub repository contains example code to help you learn how to use Cucumber for testing.
 
-- Cucumber 7 et JUnit 5
+**Key Features**:
+- Cucumber 7 and JUnit 5
 - cucumber-picocontainer 7.8
-- Maven compatible
-- JDK 17
+- Compatible with Maven
+- Requires JDK 17
 - Mockito 4.8
-- Gherkin and stepDefs FR and EN (integrate _Examples_)
-- Github Actions (See in .github/workflows) to simply make a maven+test compilation
+- Gherkin and stepDefs in both French (FR) and English (EN), including integration of _Examples_
+- GitHub Actions (Check the .github/workflows) for straightforward Maven compilation and testing.
 
 The branch _failure_on_CI_ shows tests that do not pass.
-
 
 ## Execution of tests
 
@@ -35,7 +35,7 @@ expected result:
 
 ## Organisation of the code
 
-:warning: **Please make sure to use the** **pom.xml** file that has been provided to establish the link between JUnit 5, PicoContainer, and Cucumber.
+:warning: **Please use the** **pom.xml** file provided to establish the link between JUnit 5, PicoContainer, and Cucumber.
 
 
 :arrow_forward: Two packages are used to organize the tests:
@@ -46,13 +46,13 @@ expected result:
 :arrow_forward: **Features:** 
 The feature description files (Gherkin files) are accessible under [test/resources/features](./src/test/resources/features)
 
-:arrow_forward: **StepDefs:** The implementations corresponding to the steps are defined under tests and follow the same structure as the files describing the scenarios. They refer to the sources located under main
+:arrow_forward: **StepDefs:** The implementations corresponding to the steps are defined under tests and follow the same structure as the files describing the scenarios. They refer to the sources located under main.
 
 ## Enabling Cucumber Support in IntelliJ IDEA
 
 https://www.jetbrains.com/help/idea/enabling-cucumber-support-in-project.html
 
 ## Warning
-1. Attention, if the classes defining the steps are not public, they are not accessible during execution.
+1. Attention: if the classes defining the steps are not public, they are not accessible during execution.
 2. Don't forget to adapt **RunCucumberTest.java** classes to your needs.
 
