@@ -16,8 +16,8 @@ public class StockDefinition {
 
     boolean accepted;
 
-    @Given("the stock already constains {int} doses of chocolates")
-    public void the_stock_already_constains_doses_of_chocolates(Integer number) {
+    @Given("the stock already contains {int} doses of chocolates")
+    public void the_stock_already_contains_doses_of_chocolates(Integer number) {
         stock1 = new Stock(new Ingredient("chocolate",0), number);
     }
 

@@ -14,7 +14,7 @@ Given the stock already contains 30 doses of "chocolates"
 
   Scenario Outline: adding ingredients to a stock and checking the history
     Given the stock already contains 30 doses of <ingredient_name>
-    When the manager <name> adds <amount_delta> doses of <ingredient_name>
+      When the manager <name> adds <amount_delta> doses of <ingredient_name>
     Then the stock should contain <final_amount> doses of <ingredient_name>
     And the last entry in the history should be <log_message>
     Examples:
