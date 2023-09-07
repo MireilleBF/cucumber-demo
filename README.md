@@ -38,8 +38,9 @@ expected result:
 :warning: **Please use the** **pom.xml** file provided to establish the link between JUnit 5, PicoContainer, and Cucumber.
 
 
-:arrow_forward: Two packages are used to organize the tests:
-- One contains tests for [stock management](./src/test/resources/features/store/README.md) and demonstrates the basic usage of PicoContainer with Cucumber
+:arrow_forward: Packages are used to organize the demonstrations
+- In the [_martin_fowler_](./src/main/java/martin_fowler/README.md) package, you will find Martin Fowler's example of injection by constructor and by fields.
+- In [stock management](./src/test/resources/features/store/README.md), tests demonstrate the basic usage of PicoContainer with Cucumber
 - The other presents a simplified [version of a library](./src/test/java/fr/unice/polytech/biblio) [demonstration developed by Philippe Collet](https://github.com/collet/cucumber-demo) 
 
 
@@ -52,6 +53,7 @@ The feature description files (Gherkin files) are accessible under [test/resourc
 
 https://www.jetbrains.com/help/idea/enabling-cucumber-support-in-project.html
 
+In the martin_fowler package, you will find Martin Fowler's example of injection by constructor and by fields.
 ## Warning
 1. Attention: if the classes defining the steps are not public, they are not accessible during execution.
 2. Don't forget to adapt **RunCucumberTest.java** classes to your needs.
