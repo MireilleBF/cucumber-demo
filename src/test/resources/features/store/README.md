@@ -61,14 +61,15 @@ We have defined test classes that do not rely on Cucumber and explicitly illustr
 
 
 
-## Under _purchasing_: separation of concerns 
+<!-- ## Under _purchasing_: separation of concerns 
 
 
 Our objective is to demonstrate how concerns can be managed separately 
 by organizing them into different test classes and utilizing a shared object, _PurchaseContainer_.
 
 **Features**:
-- _CustomerManagement.feature_ defines tests related to customer management.
+-  _PurchasingManagment_.feature_ defines tests related to customer management.
+
 
 **Implementations**:
 - _CustomerDefinition_ provides the implementation for the simple steps defined in _CustomerManagement.feature_.
@@ -84,6 +85,7 @@ by organizing them into different test classes and utilizing a shared object, _P
 
 
 <img src="IMAGES/purchasing.png" height="250">
+-->
 
 ## Under _payment_: MOCKITO and Dependency Injection
 Under _test_ part of _payment_, we use of a container, dependency injection and integration tests  to simulate an external payment service.
