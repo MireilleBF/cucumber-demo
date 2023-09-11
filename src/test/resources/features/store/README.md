@@ -20,10 +20,10 @@ Students are encouraged to adapt these examples to their own needs and to seek a
 **Implementations** :The associated steps are defined in _StoreDefinitions.java_.  
 <img src="IMAGES/store.png" height="150">
 
-## Under _withHistory_: first use of containers. 
-We want to verify the stock history but do not want to define the history tests in the same context as the stocks.
+## Under _withHistory_: first use of dependency injection (no picocontainer). 
+We want to verify the stock history but do not want to define the history tests in the same file as the stock tests.
 
-**Features** : _StockWithHistory.feature_ defines simple tests that include verification of stock actions and history.  
+**Features**: _StockWithHistory.feature_ defines simple tests that verify stock actions and history.  
 
 **Implementations** : The steps are defined in both _StockProcess.java_ and _StockHistoryProcess.java_.
 
@@ -34,10 +34,10 @@ We want to verify the stock history but do not want to define the history tests 
 ## Under _centralsystem_: use of explicit containers and dependency injection
 We employ a "facade" to streamline purchase management 
 by managing interactions between the purchasing store and the customer through a central system. 
-To accomplish this, we use DAOs (Data Access Objects) to represent data that could reside in databases, such as customer and store information. 
+We use DAOs (Data Access Objects) to represent data that could reside in databases, such as customer and store information. 
 Dependency injection is employed to establish connections between these classes.
 
-**Features**: The tests related to purchasing are defined in _PurchasingEcosystem.features_, covering interactions between customers, stores, and the central system.
+**Features**: The purchasing-related tests are defined in _PurchasingEcosystem.features_, covering interactions between customers, stores, and the central system.
 
 **Implementations**: The steps are defined in the following files:
 - _CustomerDefinitionInEcoSystem.java_, which references _CustomerDAO.java_ and _FacadeContainer.java_.
