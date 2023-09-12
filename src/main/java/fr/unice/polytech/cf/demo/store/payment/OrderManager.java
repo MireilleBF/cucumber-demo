@@ -1,6 +1,7 @@
 package fr.unice.polytech.cf.demo.store.payment;
 
 import fr.unice.polytech.cf.demo.store.centralsystem.CustomerManager;
+import fr.unice.polytech.cf.demo.store.centralsystem.CustomerManagerInterface;
 import fr.unice.polytech.cf.demo.store.purchasing.Customer;
 import fr.unice.polytech.cf.demo.store.purchasing.Purchase;
 
@@ -22,9 +23,9 @@ public class OrderManager {
 
     private Map<String, Order> orders = new ConcurrentHashMap<>();
     private PaymentSystem paymentSystem;
-    private CustomerManager customerManager;
+    private CustomerManagerInterface customerManager;
 
-    public OrderManager(PaymentSystem paymentSystem, CustomerManager customerManager) {
+    public OrderManager(PaymentSystem paymentSystem, CustomerManagerInterface customerManager) {
         this.paymentSystem = paymentSystem;
         this.customerManager = customerManager;
     }

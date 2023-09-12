@@ -60,3 +60,4 @@ buildNumber.properties
 pomTER.xml
 *.vpp
 *.vpp.bak_*
+*.lck
