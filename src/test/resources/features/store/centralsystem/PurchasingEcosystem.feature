@@ -1,5 +1,6 @@
 Feature: Purchasing items in stores
 
+  #BAD SCENARIOS because we check too much things in one scenario
   Scenario: A customer purchases  items in  given stores
     Given customer "john" is already registered in ecosystem
     Given the store "MCPol" is already registered in ecosystem
@@ -11,6 +12,7 @@ Feature: Purchasing items in stores
     And  the revenue of the store "MCPol" is 6 dollars in ecosystem
     And  the revenue of the store "KFCPol" is 8 dollars in ecosystem
 
+  #BAD SCENARIOS because we check too much things in one scenario
   Scenario: two customers purchases  items in  given stores
     Given customer "john" is already registered in ecosystem
     Given customer "jane" is already registered in ecosystem
