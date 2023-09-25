@@ -61,3 +61,4 @@ pomTER.xml
 *.vpp
 *.vpp.bak_*
 *.lck
+src/main/java/fr/unice/polytech/cf/demo/store/cli
