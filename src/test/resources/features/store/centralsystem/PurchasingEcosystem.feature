@@ -36,3 +36,11 @@ Feature: Purchasing items in stores
     When customer "john" completes the purchases of 1 "mc" for 6 dollars in "MCPol"
     Then an "UnknownStoreException" should be thrown
     And customer "john" cannot see that  1 "mc" in "MCPol" in its purchase history
+
+
+  Scenario: A customer purchases  one items in a given store
+    Given customer "john" is already registered in ecosystem
+    Given the store "MCPol" is already registered in ecosystem
+    When customer "john" completes the purchases of 1 "mc" for 6 dollars in "MCPol"
+    Then customer "john" can see that  1 "mc" in its purchase history
+    And  the revenue of the store "MCPol" is 6 dollars in ecosystem

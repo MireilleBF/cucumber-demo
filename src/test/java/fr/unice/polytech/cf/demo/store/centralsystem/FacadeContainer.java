@@ -6,7 +6,6 @@ import org.picocontainer.MutablePicoContainer;
 
 
 public class FacadeContainer {
-
    MutablePicoContainer container ;
 
     StoreDAO storeDAO ;
