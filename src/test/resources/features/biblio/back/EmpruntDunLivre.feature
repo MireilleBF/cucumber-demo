@@ -17,6 +17,7 @@ Fonctionnalité: Emprunter un livre
     Quand "Marcel" emprunte le livre "Design Patterns for dummies"
     Alors Il y a 1 dans son nombre d'emprunts
     Et Il y a le livre "Design Patterns for dummies" dans un emprunt de la liste d'emprunts
+    # car il y en a 2 exemplaires
     Et Le livre "Design Patterns for dummies" est disponible
 
   Scénario: rendu d'un livre

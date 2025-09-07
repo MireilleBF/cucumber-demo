@@ -1,7 +1,7 @@
 package fr.unice.polytech.biblio.stepDefs.backend;
 
-import fr.unice.polytech.biblio.components.Bibliotheque;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
 import io.cucumber.java.fr.*;

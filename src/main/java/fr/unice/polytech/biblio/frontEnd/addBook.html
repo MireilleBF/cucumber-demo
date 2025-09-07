@@ -19,7 +19,7 @@
 <input type="text" id="auteur" placeholder="Entrez auteur ici (un seul auteur pour l'instant) ">
 </p>
 <p>
-<label for="id">Identifiant (oui bizarre) : </label>
+<label for="id">Identifiant (celui de la biblio) : </label>
 <input type="text" id="id" placeholder="Entrez auteur ici">
 </p>
 <p>
@@ -42,7 +42,7 @@
             titre: titre,
             auteurs: [ auteur ],
             isbn: 'null',
-            identifiant: id
+            idDansBiblio: id
         });
         console.log('Appel de l\'API avec l\'URL :', url);
         fetch(url, {

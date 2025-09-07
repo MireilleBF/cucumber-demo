@@ -1,11 +1,13 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.apps;
 
-import fr.unice.polytech.biblio.components.Bibliotheque;
-import fr.unice.polytech.biblio.components.BookNotFoundException;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.api.dtos.StudentDTO;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.BookNotFoundException;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.server.httphandlers.HttpUtils;
-import fr.unice.polytech.biblio.server.httphandlers.LibraryHttpHandler;
+import fr.unice.polytech.biblio.api.HttpUtils;
+
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -58,8 +60,8 @@ class LibraryHttpHandlerTest {
                 var uri = URI.create(BASE_URL + "/J-1");
                 // Only to check there is no problem with the biblio
                 logger.info(biblio.getLivres().toString());
-                logger.log(Level.FINE, "book : " + biblio.getLivrebyId("J-1"));
-                Livre l = biblio.getLivrebyId("J-1");
+                logger.log(Level.FINE, "book : " + biblio.getLivreParBiblioId("J-1"));
+                Livre l = biblio.getLivreParBiblioId("J-1");
                 assertEquals("Java", l.getTitre());
                 var response = client.send(
                                 HttpRequest.newBuilder()
@@ -76,7 +78,7 @@ class LibraryHttpHandlerTest {
                 assertTrue(json.contains("Java"));
                 Livre livre = JaxsonUtils.fromJson(response.body(), Livre.class);
                 assertEquals("Java", livre.getTitre());
-                assertEquals("J-1", livre.getIdentifiant());
+                assertEquals("J-1", livre.getIdDansBiblio());
                 assertEquals("2000", livre.getIsbn());
         }
 
@@ -146,7 +148,7 @@ class LibraryHttpHandlerTest {
         void testBorrowBook() throws IOException, InterruptedException {
                 var client = HttpClient.newHttpClient();
                 var uri = URI.create(BASE_URL + "/J-1/borrow");
-                LibraryHttpHandler.StudentDTO dto = new LibraryHttpHandler.StudentDTO(123456);
+                StudentDTO dto = new StudentDTO(123456);
                 String jsonDTO = JaxsonUtils.toJson(dto);
                 logger.log(Level.FINE, "Json before : " + jsonDTO);
                 var response = client.send(
@@ -170,7 +172,7 @@ class LibraryHttpHandlerTest {
         void testBorrowBookError() throws IOException, InterruptedException {
                 var client = HttpClient.newHttpClient();
                 var uri = URI.create(BASE_URL + "/J-100/borrow");
-                LibraryHttpHandler.StudentDTO dto = new LibraryHttpHandler.StudentDTO(123456);
+                StudentDTO dto = new StudentDTO(123456);
                 String jsonDTO = JaxsonUtils.toJson(dto);
                 logger.log(Level.INFO, "Json before : " + jsonDTO);
                 var response = client.send(

@@ -1,8 +1,8 @@
 package fr.unice.polytech.biblio.stepDefs.backend;
 
-import fr.unice.polytech.biblio.components.Bibliotheque;
-import fr.unice.polytech.biblio.components.BookNotFoundException;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.BookNotFoundException;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
 import io.cucumber.java.fr.Alors;
@@ -98,7 +98,7 @@ public class BibliothequeStepdefs {
     @Quand("le lecteur cherche le livre avec l'ID U-{int}")
     public void le_lecteur_cherche_le_livre_avec_l_id_u(Integer int1) {
         try {
-            bibliotheque.getLivrebyId("U-" + int1);
+            bibliotheque.getLivreParBiblioId("U-" + int1);
         } catch (BookNotFoundException e) {
             exception = e;
         }

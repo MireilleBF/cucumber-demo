@@ -1,4 +1,4 @@
-package fr.unice.polytech.biblio.server.httphandlers;
+package fr.unice.polytech.biblio.api;
 
 public class HttpUtils {
     public static final int OK_CODE = 200;

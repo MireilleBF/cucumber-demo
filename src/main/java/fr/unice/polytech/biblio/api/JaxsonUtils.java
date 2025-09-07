@@ -1,4 +1,4 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

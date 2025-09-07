@@ -1,4 +1,4 @@
-package fr.unice.polytech.biblio.components;
+package fr.unice.polytech.biblio.services;
 
 /* BookNotFoundException is a custom exception that is thrown when a book is not found in the library */
 

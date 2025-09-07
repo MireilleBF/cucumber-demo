@@ -1,10 +1,11 @@
-package fr.unice.polytech.biblio.server.httphandlers;
+package fr.unice.polytech.biblio.api.httphandlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.api.HttpUtils;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
-import fr.unice.polytech.biblio.server.JaxsonUtils;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,16 @@ public class MembersHttpHandler implements HttpHandler {
         this.studentRegistry = studentRegistry;
     }
 
+
+    /*****
+     * Handles the incoming HTTP request.
+     * The method supports GET, POST, PUT, DELETE and OPTIONS methods.
+     * @param exchange the exchange containing the request from the
+     *                 client and used to send the response
+     * @throws IOException
+     * On a fait le choix de ne pas faire appel à une API Registry
+     * pour la gestion des membres, pour garder le code simple et surtout "transparent"
+     */
     @Override
     public void handle(com.sun.net.httpserver.HttpExchange exchange) throws IOException {
         logger.log(java.util.logging.Level.FINE, "MembersHandler called");
@@ -122,7 +133,7 @@ public class MembersHttpHandler implements HttpHandler {
         //build the response
         String response = "Member updated successfully.";
         //send the response to the client
-        exchange.getResponseHeaders().set("Content-Type", "text/plain");
+        exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
         exchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
@@ -147,7 +158,7 @@ public class MembersHttpHandler implements HttpHandler {
         //build the response
         String response = "Member added successfully.";
         //send the response to the client
-        exchange.getResponseHeaders().set("Content-Type", "text/plain");
+        exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
         exchange.sendResponseHeaders(201, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
@@ -173,14 +184,14 @@ public class MembersHttpHandler implements HttpHandler {
         List<Etudiant> etudiants = studentRegistry.findAll();
 
         //create the response
-        String response = "List of all members : \n";
+        StringBuilder response = new StringBuilder("List of all members : \n");
         for (Etudiant etudiant : etudiants) {
-            response += etudiant.toString() + "\n";
+            response.append(etudiant.toString()).append("\n");
         }
         //send the response to the client
         exchange.getResponseHeaders().set("Content-Type", "text/plain");
         exchange.sendResponseHeaders(200, response.length());
-        exchange.getResponseBody().write(response.getBytes());
+        exchange.getResponseBody().write(response.toString().getBytes());
         exchange.getResponseBody().close();
     }
 

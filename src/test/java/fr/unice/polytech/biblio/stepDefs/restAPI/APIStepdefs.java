@@ -1,16 +1,16 @@
 package fr.unice.polytech.biblio.stepDefs.restAPI;
 
 import com.sun.net.httpserver.HttpServer;
-import fr.unice.polytech.biblio.components.Bibliotheque;
-import fr.unice.polytech.biblio.components.BookNotFoundException;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.api.dtos.StudentDTO;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.BookNotFoundException;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.server.JaxsonUtils;
-import fr.unice.polytech.biblio.server.SimpleHttpServer4Library;
-import fr.unice.polytech.biblio.server.SimpleHttpServer4Scolarity;
-import fr.unice.polytech.biblio.server.httphandlers.HttpUtils;
-import fr.unice.polytech.biblio.server.httphandlers.LibraryHttpHandler;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.apps.SimpleHttpServer4Library;
+import fr.unice.polytech.biblio.apps.SimpleHttpServer4Scolarity;
+import fr.unice.polytech.biblio.api.HttpUtils;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.*;
 //todo: replace rentals by loans in all the project
 public class APIStepdefs {
 
-    private static final int PORT4LIBRARY = 8000;
-    private static final int PORT4SCOLARITY = 8001;
-    private static final String BASE_URL4LIBRARY = "http://localhost:" + PORT4LIBRARY + "/api/library";
+    private static int PORT4LIBRARY = 8000;
+    private static int PORT4SCOLARITY = 8001;
+    private static String BASE_URL4LIBRARY ;
 
     static HttpServer scolarity;
     static HttpServer library;
@@ -50,6 +50,13 @@ public class APIStepdefs {
     @BeforeAll
     public static void setup() throws IOException {
         logger.info("Je démarre les serveurs");
+        //@MI TODO
+        PORT4LIBRARY = SimpleHttpServer4Library.findFreePortFrom(PORT4LIBRARY);
+        System.out.println("Port " + "PORT4LIBRARY" + " est " + PORT4LIBRARY);
+        BASE_URL4LIBRARY = "http://localhost:" + PORT4LIBRARY + "/api/library";
+
+        PORT4SCOLARITY = SimpleHttpServer4Scolarity.findFreePortFrom(PORT4SCOLARITY);
+        System.out.println("Port " + "PORT4SCOLARITY" + " est " + PORT4SCOLARITY);
 
         scolarity = SimpleHttpServer4Scolarity.startServer(PORT4SCOLARITY, studentRegistry);
         library = SimpleHttpServer4Library.startServer(PORT4LIBRARY, biblio, studentRegistry);
@@ -100,7 +107,7 @@ public class APIStepdefs {
     @Given("a book of title {string} with id {string} has not been registered")
     public void a_book_of_title_with_id_has_not_been_registered(String title, String id) {
         try {
-            biblio.getLivrebyId(id);
+            biblio.getLivreParBiblioId(id);
         } catch (BookNotFoundException e) {
             return;
         }
@@ -110,7 +117,7 @@ public class APIStepdefs {
     private Livre getOrCreateAndRegisterABook(String title, String bookId) {
         Livre l;
         try {
-            l = biblio.getLivrebyId(bookId);
+            l = biblio.getLivreParBiblioId(bookId);
         } catch (BookNotFoundException e) {
             l = Livre.createLivre(title, bookId);
         }
@@ -206,7 +213,7 @@ public class APIStepdefs {
         var client = HttpClient.newHttpClient();
         var uri = URI.create(BASE_URL4LIBRARY + "/" + bookId + "/borrow");
 
-        LibraryHttpHandler.StudentDTO dto = new LibraryHttpHandler.StudentDTO(studentId);
+        StudentDTO dto = new StudentDTO(studentId);
         String jsonDTO = JaxsonUtils.toJson(dto);
         logger.log(Level.FINE, "Json before : {0}", jsonDTO);
         response = client.send(
@@ -281,13 +288,13 @@ public class APIStepdefs {
 
     @Then("The book with id {string} is no longer available")
     public void the_book_with_id_is_no_longer_available(String bookId) throws BookNotFoundException {
-        var book = biblio.getLivrebyId(bookId);
+        var book = biblio.getLivreParBiblioId(bookId);
         assertTrue(book.estEmprunte());
     }
 
     @Then("the book with id {string} is still available")
     public void the_book_with_id_is_still_available(String bookId) throws BookNotFoundException {
-        var book = biblio.getLivrebyId(bookId);
+        var book = biblio.getLivreParBiblioId(bookId);
         assertFalse(book.estEmprunte());
     }
 

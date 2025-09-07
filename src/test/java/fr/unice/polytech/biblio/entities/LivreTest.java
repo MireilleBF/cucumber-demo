@@ -36,10 +36,10 @@ class LivreTest { // Just pour vérifier que JUnit 5 est bien configuré
         String titre = "Voici une belle histoire";
         Livre livre1 = new Livre(titre);
         assertEquals(titre, livre1.getTitre());
-        assertEquals("Vubh-0", livre1.getIdentifiant());
+        assertEquals("Vubh-0", livre1.getIdDansBiblio());
         Livre livre2 = new Livre(titre, 1);
         assertEquals(titre, livre2.getTitre());
-        assertEquals("Vubh-1", livre2.getIdentifiant());
+        assertEquals("Vubh-1", livre2.getIdDansBiblio());
         assertNotEquals(livre1, livre2);
     }
 }

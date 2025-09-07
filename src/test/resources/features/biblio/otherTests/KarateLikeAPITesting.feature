@@ -2,8 +2,8 @@
 Feature: Library API Testing with Karate Approach
 
 Background:
-  * libraryPort = 8006
-  * scolarityPort = 8009
+  * libraryPort = 8100
+  * scolarityPort = 8101
   * urlbase 'http://localhost'
   * url4library = urlbase + ':' + libraryPort + '/api/library'
 

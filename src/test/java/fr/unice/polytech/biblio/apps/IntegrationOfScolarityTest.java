@@ -1,9 +1,11 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.apps;
 
-import fr.unice.polytech.biblio.components.Bibliotheque;
-import fr.unice.polytech.biblio.components.StudentRegistry;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.api.dtos.StudentDTO;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
-import fr.unice.polytech.biblio.server.httphandlers.LibraryHttpHandler;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +66,7 @@ class IntegrationOfScolarityTest {
         var client = HttpClient.newHttpClient();
         var uri = URI.create(BASE_URL + "/J-1/borrow");
 
-        LibraryHttpHandler.StudentDTO dto = new LibraryHttpHandler.StudentDTO(123456);
+        StudentDTO dto = new StudentDTO(123456);
         String jsonDTO = JaxsonUtils.toJson(dto);
         logger.log(Level.FINE, "Json before : " + jsonDTO);
         var response = client.send(

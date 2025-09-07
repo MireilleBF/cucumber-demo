@@ -1,7 +1,8 @@
-package fr.unice.polytech.biblio.server.httphandlers;
+package fr.unice.polytech.biblio.api.httphandlers;
 
 
 import com.sun.net.httpserver.HttpExchange;
+import fr.unice.polytech.biblio.api.HttpUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/****
+ * This class is a global exception handler for HTTP requests.
+ * It catches different types of exceptions and sends appropriate HTTP responses.
+ */
 public class GlobalExceptionHandler {
 
     private GlobalExceptionHandler() {

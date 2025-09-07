@@ -1,9 +1,10 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.apps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.api.dtos.StudentDTO;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.server.httphandlers.LibraryHttpHandler;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,12 +43,12 @@ class JaxsonUtilsTest {
 
     @Test
     void testFromJsonToBook() throws JsonProcessingException {
-        String json = "{\"titre\":\"Design Patterns\",\"auteurs\":[\"Erich Gamma\"],\"isbn\":\"1994\",\"identifiant\":\"DP-0\"}";
+        String json = "{\"titre\":\"Design Patterns\",\"auteurs\":[\"Erich Gamma\"],\"isbn\":\"1994\",\"idDansBiblio\":\"DP-0\"}";
         Livre livre = JaxsonUtils.fromJson(json, Livre.class);
         assertNotNull(livre);
         assertEquals("Design Patterns", livre.getTitre());
         assertEquals("1994", livre.getIsbn());
-        assertEquals("DP-0", livre.getIdentifiant());
+        assertEquals("DP-0", livre.getIdDansBiblio());
 
         livre = new Livre("Your Code as a Crime Scene", new String[] { "Adam Tornhill" }, "123");
         String newBook = JaxsonUtils.toJson(livre);
@@ -57,7 +58,7 @@ class JaxsonUtilsTest {
 
     @Test
     void testFromStudentDTOToJson() throws JsonProcessingException {
-        LibraryHttpHandler.StudentDTO studentDTO = new LibraryHttpHandler.StudentDTO(123456);
+        StudentDTO studentDTO = new StudentDTO(123456);
         String json = JaxsonUtils.toJson(studentDTO);
         assertNotNull(json);
         assertTrue(json.contains("\"studentNumber\":123456"));
@@ -66,7 +67,7 @@ class JaxsonUtilsTest {
     @Test
     void testFromJsonToStudentDTO() {
         String json = "{\"studentNumber\":123456}";
-        LibraryHttpHandler.StudentDTO studentDTO = JaxsonUtils.fromJson(json, LibraryHttpHandler.StudentDTO.class);
+        StudentDTO studentDTO = JaxsonUtils.fromJson(json, StudentDTO.class);
         assertNotNull(studentDTO);
         assertEquals(123456, studentDTO.studentNumber());
     }

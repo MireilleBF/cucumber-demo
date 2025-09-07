@@ -1,12 +1,12 @@
-package fr.unice.polytech.biblio.components;
+package fr.unice.polytech.biblio.services;
 
 import fr.unice.polytech.biblio.entities.Emprunt;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.repositories.BookRepository;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Ph. Collet
@@ -16,24 +16,29 @@ import java.util.stream.Collectors;
 public class Bibliotheque {
 
 	public static final int DUREE_MAX_EMPRUNT = 15;
+
 	// Nous séparons les étudiants et les livres
 	// La bibliothèque ne connait que les livres mais interagit avec les étudiants
 	// pour les emprunts
 	// @Todo : Ce point devrait être amélioré, en ne mettant aucune information
 	// concernant les emprunts dans étudiant.
-	private Map<String, List<Livre>> livres = new HashMap<>();
+
+    //BookRepository gère la persistance des livres
+	private BookRepository bookRepository = new BookRepository();
+
+    // Emprunts en cours, indexés par le livre emprunté
+    //On pourrait avoir de la persistance pour les emprunts aussi
 	private Map<Livre, Emprunt> emprunts = new HashMap<>();
 
-	private Map<String, Livre> livreById = new HashMap<>();
 
 	public Bibliotheque() {
 		initLibrary();
 	}
 
 	// To mimic loading of books from a database
-
 	private void initLibrary() {
 		addLivre(new Livre("UML", new String[] { "Booch", "Rumbaugh", "Jacobson" }, "1999", 0));
+        addLivre(new Livre("UML", new String[] { "Booch", "Rumbaugh", "Jacobson" }, "1999", 4));
 		addLivre(new Livre("Java", new String[] { "Gosling", "Holmes" }, "2000", 1));
 		addLivre(new Livre("Design Patterns", new String[] { "Erich Gamma" }, "1994", 2));
 		addLivre(new Livre("Refactoring", new String[] { "Martin Fowler" }, "1999", 3));
@@ -41,27 +46,30 @@ public class Bibliotheque {
 
 	/************* Gestion des livres *******************/
 	public void addLivre(Livre l) {
-		livres.putIfAbsent(l.getTitre(), new ArrayList<>());
-		livres.get(l.getTitre()).add(l);
-		livreById.put(l.getIdentifiant(), l);
+        bookRepository.save(l);
 	}
 
+    // Retourne la liste de tous les livres
+    // (empruntés ou non)
+    //Uniquement présents pour les tests et le déboggage mais bien sûr à supprimer dans une vraie application
 	public List<Livre> getLivres() {
-		return livres.values()
-				.stream()
-				.flatMap(Collection::stream)
-				.collect(Collectors.toList());
+        Iterable<Livre> res = bookRepository.findAll();
+        List<Livre> target = new ArrayList<>();
+        res.forEach(target::add);
+        return target;
 	}
 
 	/********** Gestion des emprunts de livres **********/
 	public Optional<Livre> getLivreDisponibleByTitle(String titre) {
-		return Optional.ofNullable(livres.get(titre))
-				.flatMap(la -> la.stream().filter(l -> !l.estEmprunte()).findAny());
+		return bookRepository.getBooksByTitle(titre)
+                        .stream()
+                        .filter(l -> !l.estEmprunte())
+                        .findAny();
 	}
 
 	/********** Gestion des emprunts de livres **********/
 	public List<Livre> getLivresByTitle(String titre) {
-		return Optional.ofNullable(livres.get(titre)).orElseGet(ArrayList::new);
+		return bookRepository.getBooksByTitle(titre);
 	}
 
 	public boolean emprunte(Etudiant e, Livre l) {
@@ -72,16 +80,13 @@ public class Bibliotheque {
 		emprunts.put(l, emprunt);
 		l.setEstEmprunte(true);
 		e.addEmprunt(emprunt);
-
 		return true;
 	}
 
 	public Emprunt getEmpruntByLivre(Livre l) {
-		return emprunts.get(l);
+        return emprunts.get(l);
 	}
 
-	// Cette méthode viole la loi de Demeter car elle connait trop de choses sur
-	// l'étudiant...
 	public boolean rend(Livre l) {
 		if (!l.estEmprunte()) {
 			return false;
@@ -96,8 +101,8 @@ public class Bibliotheque {
 		return new ArrayList<>(emprunts.values());
 	}
 
-	public Livre getLivrebyId(String id) throws BookNotFoundException {
-		var livre = livreById.get(id);
+	public Livre getLivreParBiblioId(String id) throws BookNotFoundException {
+		var livre = bookRepository.getBookByLibraryId(id);
 		if (livre == null) {
 			throw new BookNotFoundException("Book not found");
 		}

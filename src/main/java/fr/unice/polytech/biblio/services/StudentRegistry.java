@@ -1,18 +1,12 @@
-package fr.unice.polytech.biblio.components;
+package fr.unice.polytech.biblio.services;
 
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.interfaces.StudentFinder;
 import fr.unice.polytech.biblio.interfaces.StudentManager;
+import fr.unice.polytech.biblio.repositories.StudentRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-/*
- * Mireille Blay-Fornarino
-
- */
 
 /*
     * This class is used to manage the students of the university.
@@ -21,21 +15,27 @@ import java.util.Optional;
  */
 public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> {
 
-    Map<Integer, Etudiant> students = new HashMap<>();
+    private StudentRepository studentRepository = new StudentRepository();
+
+    //Map<Integer, Etudiant> students = new HashMap<>();
 
     @Override
     public List<Etudiant> findAll() {
-        return List.of(students.values().toArray(new Etudiant[0]));
+        List<Etudiant> students = new ArrayList<>();
+        studentRepository.findAll().forEach(students::add);
+        return students;
+        //return List.of(students.values().toArray(new Etudiant[0]));
     }
 
     @Override
     public Optional<Etudiant> findByName(String name) {
-        return students.values().stream().filter(e -> e.getName().equals(name)).findFirst();
+        return studentRepository.findByName(name);
     }
 
     @Override
     public Optional<Etudiant> findByNumber(int studentNumber) {
-        return Optional.ofNullable(students.get(studentNumber));
+        return studentRepository.findById(studentNumber);
+        //return Optional.ofNullable(students.get(studentNumber));
     }
 
     @Override
@@ -43,24 +43,29 @@ public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> 
         Etudiant student = new Etudiant();
         student.setName(name);
         student.setStudentNumber(studentNumber);
-        students.put(studentNumber, student);
+        studentRepository.save(student, studentNumber);
+        //students.put(studentNumber, student);
     }
 
     @Override
     public void removeStudent(int studentNumber) {
-        students.remove(studentNumber);
+        studentRepository.deleteById(studentNumber);
+        //students.remove(studentNumber);
     }
 
     @Override
     public void updateStudent(int studentNumber, String name) {
-        if (students.get(studentNumber) != null)
-            students.get(studentNumber).setName(name);
-        else {
-            Etudiant student = new Etudiant();
+        if (studentRepository.findById(studentNumber).isPresent()) {
+            Etudiant student = studentRepository.findById(studentNumber).get();
             student.setName(name);
-            student.setStudentNumber(studentNumber);
-            students.put(studentNumber, student);
+            studentRepository.save(student, studentNumber);
+            return;
         }
+        // If the student does not exist, we create it
+        Etudiant student = new Etudiant();
+        student.setName(name);
+        student.setStudentNumber(studentNumber);
+        studentRepository.save(student, studentNumber);
     }
 
     public StudentRegistry() {
@@ -68,11 +73,11 @@ public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> 
         Etudiant etudiant1 = new Etudiant();
         etudiant1.setName("John Doe");
         etudiant1.setStudentNumber(123456);
-        students.put(123456, etudiant1);
+        studentRepository.save(etudiant1, 123456);
 
         Etudiant etudiant2 = new Etudiant();
         etudiant2.setName("Jane Doe");
         etudiant2.setStudentNumber(654321);
-        students.put(654321, etudiant2);
+        studentRepository.save(etudiant2, 654321);
     }
 }

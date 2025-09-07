@@ -1,8 +1,8 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.apps;
 
 import com.sun.net.httpserver.HttpServer;
-import fr.unice.polytech.biblio.components.StudentRegistry;
-import fr.unice.polytech.biblio.server.httphandlers.MembersHttpHandler;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.api.httphandlers.MembersHttpHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -34,6 +34,7 @@ public class SimpleHttpServer4Scolarity {
 
     static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("SimpleHttpServer4Scolarity");
 
+
     static {
         logger.setLevel(Level.SEVERE);
     }
@@ -46,20 +47,26 @@ public class SimpleHttpServer4Scolarity {
     }
 
 
+    public static int findFreePortFrom(int port) {
+        while (servers.get(port) != null) {
+            port++;
+        }
+        return port;
+    }
+
     public static HttpServer startServer(int port) throws IOException {
         return startServer(port, new StudentRegistry());
     }
 
     public static HttpServer startServer(int port, StudentRegistry studentRegistry) throws IOException {
-        logger.log(Level.SEVERE, "scolarity servers on " + servers.keySet());
-        logger.log(Level.SEVERE, "Starting Scolarity Server on port "+port);
+        logger.log(Level.INFO, "scolarity servers on " + servers.keySet());
+        logger.log(Level.SEVERE, "********========> Starting Scolarity Server on port "+port);
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/members", new MembersHttpHandler(studentRegistry));
         server.setExecutor(null); // creates a default executor
         server.start();
         servers.put(port,server);
         logger.log(Level.INFO, "Scolarity Server started on port "+port);
-        //System.out.println(STR."Scolarity Server started on port \{port}");
         return server;
     }
 
@@ -72,5 +79,11 @@ public class SimpleHttpServer4Scolarity {
     }
 
 
+    public static boolean isRunning(int port4SCOLARITY) {
+        return servers.get(port4SCOLARITY) != null;
+    }
 
+    public static HttpServer getServer(int port4SCOLARITY) {
+        return servers.get(port4SCOLARITY);
+    }
 }

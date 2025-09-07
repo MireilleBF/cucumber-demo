@@ -1,5 +1,6 @@
-package fr.unice.polytech.biblio.server;
+package fr.unice.polytech.biblio.apps;
 
+import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,24 +16,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MembersHttpHandlerTest {
 
-        private static final int PORT = 8002;
-        private static final String BASE_URL = "http://localhost:" + PORT + "/api/members";
+        private int PORT = 8002;
+        private final String BASE_URL = "http://localhost:" + PORT + "/api/members";
 
         /**
          * Start the server before each test
          * This will allow to test the server but the cost is that the server will be
          * started and stopped for each test
-         *
+         * To avoid conflict with other servers, we look for a free port
          * @throws IOException
          */
         @BeforeEach
         void setUp() throws IOException {
+                PORT = SimpleHttpServer4Library.findFreePortFrom(PORT);
                 SimpleHttpServer4Scolarity.startServer(PORT);
         }
 
         @AfterEach
         void tearDown() {
-                SimpleHttpServer4Scolarity.stopServer(PORT);
+            SimpleHttpServer4Scolarity.stopServer(PORT);
         }
 
         @Test
@@ -62,7 +64,7 @@ class MembersHttpHandlerTest {
                 testGetAMemberById(studentNumber, expectedName);
         }
 
-        private static void testGetAMemberById(int studentNumber, String expectedName)
+        private void testGetAMemberById(int studentNumber, String expectedName)
                         throws IOException, InterruptedException {
                 // Build the request
                 var client = HttpClient.newHttpClient();
