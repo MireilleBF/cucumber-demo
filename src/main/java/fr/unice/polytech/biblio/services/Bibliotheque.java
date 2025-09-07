@@ -59,6 +59,20 @@ public class Bibliotheque {
         return target;
 	}
 
+
+    public List<Livre> getLivresByTitle(String titre) {
+        return bookRepository.getBooksByTitle(titre);
+    }
+
+
+    public Livre getLivreParBiblioId(String id) throws BookNotFoundException {
+        var livre = bookRepository.getBookByLibraryId(id);
+        if (livre == null) {
+            throw new BookNotFoundException("Book not found");
+        }
+        return livre;
+    }
+
 	/********** Gestion des emprunts de livres **********/
 	public Optional<Livre> getLivreDisponibleByTitle(String titre) {
 		return bookRepository.getBooksByTitle(titre)
@@ -67,10 +81,6 @@ public class Bibliotheque {
                         .findAny();
 	}
 
-	/********** Gestion des emprunts de livres **********/
-	public List<Livre> getLivresByTitle(String titre) {
-		return bookRepository.getBooksByTitle(titre);
-	}
 
 	public boolean emprunte(Etudiant e, Livre l) {
 		if (l.estEmprunte()) {
@@ -79,6 +89,7 @@ public class Bibliotheque {
 		Emprunt emprunt = new Emprunt(LocalDate.now().plusDays(DUREE_MAX_EMPRUNT), e, l);
 		emprunts.put(l, emprunt);
 		l.setEstEmprunte(true);
+        //Il faudrait éviter cette dépendance entre Etudiant et Bibliotheque
 		e.addEmprunt(emprunt);
 		return true;
 	}
@@ -93,6 +104,7 @@ public class Bibliotheque {
 		}
 		Emprunt emprunt = emprunts.remove(l);
 		l.setEstEmprunte(false);
+        //Il faudrait éviter cette dépendance entre Etudiant et Bibliotheque
 		emprunt.getEmprunteur().removeEmprunt(emprunt);
 		return true;
 	}
@@ -101,12 +113,6 @@ public class Bibliotheque {
 		return new ArrayList<>(emprunts.values());
 	}
 
-	public Livre getLivreParBiblioId(String id) throws BookNotFoundException {
-		var livre = bookRepository.getBookByLibraryId(id);
-		if (livre == null) {
-			throw new BookNotFoundException("Book not found");
-		}
-		return livre;
-	}
+
 
 }

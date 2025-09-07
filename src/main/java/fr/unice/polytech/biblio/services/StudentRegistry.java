@@ -1,8 +1,6 @@
 package fr.unice.polytech.biblio.services;
 
 import fr.unice.polytech.biblio.entities.Etudiant;
-import fr.unice.polytech.biblio.interfaces.StudentFinder;
-import fr.unice.polytech.biblio.interfaces.StudentManager;
 import fr.unice.polytech.biblio.repositories.StudentRepository;
 
 import java.util.*;
@@ -13,13 +11,12 @@ import java.util.*;
     * We choose to return optional and not to deal with exceptions as we did in the library.
     * We could have used exceptions, but we wanted to show that we can use optional.
  */
-public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> {
+public class StudentRegistry {
 
     private StudentRepository studentRepository = new StudentRepository();
 
     //Map<Integer, Etudiant> students = new HashMap<>();
 
-    @Override
     public List<Etudiant> findAll() {
         List<Etudiant> students = new ArrayList<>();
         studentRepository.findAll().forEach(students::add);
@@ -27,18 +24,18 @@ public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> 
         //return List.of(students.values().toArray(new Etudiant[0]));
     }
 
-    @Override
+
     public Optional<Etudiant> findByName(String name) {
         return studentRepository.findByName(name);
     }
 
-    @Override
+
     public Optional<Etudiant> findByNumber(int studentNumber) {
         return studentRepository.findById(studentNumber);
         //return Optional.ofNullable(students.get(studentNumber));
     }
 
-    @Override
+
     public void addStudent(String name, int studentNumber) {
         Etudiant student = new Etudiant();
         student.setName(name);
@@ -47,13 +44,12 @@ public class StudentRegistry implements StudentManager, StudentFinder<Etudiant> 
         //students.put(studentNumber, student);
     }
 
-    @Override
     public void removeStudent(int studentNumber) {
         studentRepository.deleteById(studentNumber);
         //students.remove(studentNumber);
     }
 
-    @Override
+
     public void updateStudent(int studentNumber, String name) {
         if (studentRepository.findById(studentNumber).isPresent()) {
             Etudiant student = studentRepository.findById(studentNumber).get();

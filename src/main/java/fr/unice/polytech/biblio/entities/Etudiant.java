@@ -1,7 +1,6 @@
 package fr.unice.polytech.biblio.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.biblio.interfaces.StudentInterface;
 
 import java.util.*;
 
@@ -13,7 +12,7 @@ import java.util.*;
  * comment on peut gérer des collections d'objets dans un objet sérialisé.
  * et avoir plusieurs points de vue sur un même objet.
  */
-public class Etudiant implements StudentInterface {
+public class Etudiant {
 
 	@JsonProperty("name")
 	private String nom;
