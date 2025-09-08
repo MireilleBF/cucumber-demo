@@ -27,8 +27,6 @@ hs_err_pid*
 .idea/*
 *.iml
 
-
-
 # IntelliJ
 out/
 target/
@@ -45,20 +43,10 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-## From Philippe :-)
+# Others
 **/*~
 .idea
 **/*.class
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-pomTER.xml
 *.vpp
 *.vpp.bak_*
 *.lck
-src/main/java/fr/unice/polytech/cf/demo/store/cli
