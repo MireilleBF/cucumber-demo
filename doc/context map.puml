@@ -24,7 +24,7 @@ package "Paying" as Paying  #A9DCDF{
   '[Student Credit]
 }
 
-package "Statistics Managment " as Statistics #ADD1B2{
+package "Statistics Managment " as Statistics {
   '[Statistics]
 }
 
@@ -45,14 +45,14 @@ package "Deliverying" as Delivery {
 ' Relations
 Identity --> Ordering : Authenticates \n Registered Users
 Ordering --> Delivery : Requests Delivery \n for Orders
-Delivery --> Statistics : Event \n Delivery Performance Data
+Delivery --> Statistics : Traces \n Delivery Performance Data
 
 
 Catalog --> Ordering : Provides \n Menus & Capacities
 Ordering --> Paying : Provides Amount\n & Order State
-Paying --> Ordering : "Event\n PaymentSucceeded"
-Ordering --> Statistics : "Event\n OrderValidated"
-Paying --> Statistics : "Event\n PaymentSucceeded"
+Paying --> Ordering : "Validates\n Payment Success"
+Ordering --> Statistics : "Traces\n OrderValidated"
+Paying --> Statistics : "Traces\n PaymentSucceeded"
 Catalog <-- AI : Provides Photo Analysis
 
 
