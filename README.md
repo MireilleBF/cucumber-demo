@@ -18,17 +18,19 @@ expected result:
 ```
 ...... (output shortened)
 
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.179 s -- in fr.unice.polytech.biblio.RunCucumberTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 52, Failures: 0, Errors: 0, Skipped: 0
 [INFO] 
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.871 s
-[INFO] Finished at: 2025-09-08T11:51:30+02:00
-[INFO] ------------------------------------------------------------------------```
+[INFO] Total time:  2.169 s
+[INFO] Finished at: 2025-09-08T14:24:11+02:00
+[INFO] ------------------------------------------------------------------------
+```
 
 ## Organisation of the code
 
