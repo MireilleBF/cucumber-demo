@@ -69,7 +69,7 @@ public class GlobalExceptionHandler {
     }
 
     private static void sendErrorResponse(HttpExchange exchange, int statusCode, String message) throws IOException {
-        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.APPLICATION_JSON);
         String response = "{\"error\": \"" + message + "\"}";
         exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
         OutputStream os = exchange.getResponseBody();

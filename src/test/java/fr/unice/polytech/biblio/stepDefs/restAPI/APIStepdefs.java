@@ -194,9 +194,8 @@ public class APIStepdefs {
                         .build(),
                 HttpResponse.BodyHandlers.ofString());
 
-        String jsonMimeType = "text/plain";
-        assertEquals(201, response.statusCode());
-        assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+        assertEquals(HttpUtils.CREATED, response.statusCode());
+        assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
         logger.info(response.body());
 
         assertEquals("Book created", response.body());
@@ -242,7 +241,7 @@ public class APIStepdefs {
     @Then("the server should return a success status")
     public void the_server_should_return_a_success_status() {
         int statuscode = response.statusCode();
-        assertTrue(statuscode == 200 || statuscode == 201);
+        assertTrue(statuscode == HttpUtils.OK || statuscode == HttpUtils.CREATED);
     }
 
     @Then("the server should return a failure status")
@@ -272,9 +271,8 @@ public class APIStepdefs {
 
     @Then("the requested list is returned in json format")
     public void the_requested_list_is_returned_in_json_format() {
-        String jsonMimeType = "application/json";
-        assertEquals(200, response.statusCode());
-        assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+        assertEquals(HttpUtils.OK, response.statusCode());
+        assertEquals(HttpUtils.APPLICATION_JSON, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
     }
 
     @Then("the list contains at least {int} books")

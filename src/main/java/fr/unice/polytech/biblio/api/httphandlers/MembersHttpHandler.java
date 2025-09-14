@@ -130,7 +130,7 @@ public class MembersHttpHandler implements HttpHandler {
         String response = "Member updated successfully.";
         //send the response to the client
         exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
-        exchange.sendResponseHeaders(200, response.getBytes().length);
+        exchange.sendResponseHeaders(HttpUtils.OK, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
@@ -155,7 +155,7 @@ public class MembersHttpHandler implements HttpHandler {
         String response = "Member added successfully.";
         //send the response to the client
         exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
-        exchange.sendResponseHeaders(201, response.getBytes().length);
+        exchange.sendResponseHeaders(HttpUtils.CREATED, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
@@ -164,13 +164,13 @@ public class MembersHttpHandler implements HttpHandler {
     private void answerWithMember(HttpExchange exchange, String id) throws IOException {
         Etudiant etudiant = studentRegistry.findByNumber(Integer.parseInt(id)).orElse(null);
         if (etudiant == null) {
-            exchange.sendResponseHeaders(404, 0);
+            exchange.sendResponseHeaders(HttpUtils.RESOURCE_NOT_FOUND, 0);
             exchange.getResponseBody().close();
 
         } else {
-            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.APPLICATION_JSON);
             String response = JaxsonUtils.toJson(etudiant);
-            exchange.sendResponseHeaders(200, response.length());
+            exchange.sendResponseHeaders(HttpUtils.OK, response.length());
             exchange.getResponseBody().write(response.getBytes());
             exchange.getResponseBody().close();
         }
@@ -185,8 +185,8 @@ public class MembersHttpHandler implements HttpHandler {
             response.append(etudiant.toString()).append("\n");
         }
         //send the response to the client
-        exchange.getResponseHeaders().set("Content-Type", "text/plain");
-        exchange.sendResponseHeaders(200, response.length());
+        exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
+        exchange.sendResponseHeaders(HttpUtils.OK, response.length());
         exchange.getResponseBody().write(response.toString().getBytes());
         exchange.getResponseBody().close();
     }

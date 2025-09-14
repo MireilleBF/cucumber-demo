@@ -71,9 +71,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "application/json";
-                assertEquals(200, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.OK, response.statusCode());
+                assertEquals(HttpUtils.APPLICATION_JSON, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 String json = response.body();
                 logger.log(Level.FINE, "book : " + json);
                 assertTrue(json.contains("Java"));
@@ -95,9 +94,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "application/json";
                 assertEquals(HttpUtils.RESOURCE_NOT_FOUND, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.APPLICATION_JSON, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 assertEquals("{\"error\": \"Book not found\"}", response.body());
         }
 
@@ -112,9 +110,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "application/json";
-                assertEquals(200, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.OK, response.statusCode());
+                assertEquals(HttpUtils.APPLICATION_JSON, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 logger.log(Level.FINE, response.body());
                 assertTrue(response.body().contains("Design Patterns"));
         }
@@ -137,9 +134,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "text/plain";
-                assertEquals(201, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.CREATED, response.statusCode());
+                assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 assertEquals("Book created", response.body());
 
                 // Testing the payload
@@ -159,9 +155,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "text/plain";
                 assertEquals(HttpUtils.CREATED, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 logger.log(Level.FINE, response.body());
 
                 assertEquals("Book borrowed", response.body());
@@ -204,9 +199,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "text/plain";
                 assertEquals(HttpUtils.CREATED, response1.statusCode());
-                assertEquals(jsonMimeType, response1.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.TEXT_PLAIN, response1.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 logger.log(Level.FINE, response1.body());
 
                 assertEquals("Book borrowed", response1.body());
@@ -241,9 +235,8 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "text/plain";
                 assertEquals(HttpUtils.CREATED, response1.statusCode());
-                assertEquals(jsonMimeType, response1.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.TEXT_PLAIN, response1.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 logger.log(Level.FINE, response1.body());
 
                 assertEquals("Book borrowed", response1.body());
