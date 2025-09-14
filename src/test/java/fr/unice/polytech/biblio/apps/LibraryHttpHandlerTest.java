@@ -1,14 +1,15 @@
 package fr.unice.polytech.biblio.apps;
 
+import fr.unice.polytech.biblio.api.HttpUtils;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.api.dtos.StudentDTO;
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.BookNotFoundException;
-import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.api.HttpUtils;
-
-import org.junit.jupiter.api.*;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URI;
@@ -55,7 +56,7 @@ class LibraryHttpHandlerTest {
         }
 
         @Test
-        void testGetBook() throws IOException, InterruptedException, BookNotFoundException {
+        void testGetBook() throws IOException, InterruptedException, ResourceNotFoundException {
                 var client = HttpClient.newHttpClient();
                 var uri = URI.create(BASE_URL + "/J-1");
                 // Only to check there is no problem with the biblio
@@ -95,7 +96,7 @@ class LibraryHttpHandlerTest {
                                 HttpResponse.BodyHandlers.ofString());
 
                 String jsonMimeType = "application/json";
-                assertEquals(404, response.statusCode());
+                assertEquals(HttpUtils.RESOURCE_NOT_FOUND, response.statusCode());
                 assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
                 assertEquals("{\"error\": \"Book not found\"}", response.body());
         }
@@ -159,7 +160,7 @@ class LibraryHttpHandlerTest {
                                 HttpResponse.BodyHandlers.ofString());
 
                 String jsonMimeType = "text/plain";
-                assertEquals(201, response.statusCode());
+                assertEquals(HttpUtils.CREATED, response.statusCode());
                 assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
                 logger.log(Level.FINE, response.body());
 
@@ -167,9 +168,8 @@ class LibraryHttpHandlerTest {
 
         }
 
-        // Test the case where the book cannot be borrowed
         @Test
-        void testBorrowBookError() throws IOException, InterruptedException {
+        void testBorrowBookFailedWhenBookNotFound() throws IOException, InterruptedException {
                 var client = HttpClient.newHttpClient();
                 var uri = URI.create(BASE_URL + "/J-100/borrow");
                 StudentDTO dto = new StudentDTO(123456);
@@ -182,9 +182,9 @@ class LibraryHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String jsonMimeType = "application/json";
-                assertEquals(HttpUtils.NOT_FOUND_RESOURCE, response.statusCode());
-                assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                String jsonMimeType = HttpUtils.APPLICATION_JSON;
+                assertEquals(HttpUtils.RESOURCE_NOT_FOUND, response.statusCode());
+                assertEquals(jsonMimeType, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 logger.log(Level.FINE, response.body());
 
                 assertEquals("{\"error\": \"Book not found\"}", response.body());

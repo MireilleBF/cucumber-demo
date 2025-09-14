@@ -63,7 +63,7 @@ class  api.ApiRegistry$RouteEntry {
 interface  repositories.Repository {
 }
 
-class  services.BookNotFoundException {
+class  services.ResourceNotFoundException {
 }
 class  entities.Etudiant {
 + String getName()
@@ -168,7 +168,7 @@ class  entities.Emprunt {
 
  repositories.BasicRepositoryImpl <|--  repositories.StudentRepository
  api.ApiRegistry +..  api.ApiRegistry$RouteEntry
- services.Exception <|--  services.BookNotFoundException
+ services.Exception <|--  services.ResourceNotFoundException
 
  repositories.BasicRepositoryImpl <|--  repositories.BookRepository
 

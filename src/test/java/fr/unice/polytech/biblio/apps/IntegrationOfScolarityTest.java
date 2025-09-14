@@ -2,13 +2,13 @@ package fr.unice.polytech.biblio.apps;
 
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.api.dtos.StudentDTO;
+import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Etudiant;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;

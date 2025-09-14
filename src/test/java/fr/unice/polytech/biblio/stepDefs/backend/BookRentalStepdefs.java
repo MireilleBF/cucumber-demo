@@ -1,9 +1,11 @@
 package fr.unice.polytech.biblio.stepDefs.backend;
 
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.services.exceptions.BookAlreadyBorrowedException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -28,11 +30,10 @@ public class BookRentalStepdefs {
       // méthodes)
 
     @Given("a student of name {string} and with student id {int}")
-    public void givenAStudent(String nomEtudiant, Integer noEtudiant) // besoin de refactorer int en Integer car
-                                                                      // utilisation de la généricité par Cucumber Java
-                                                                      // 8
+    public void givenAStudent(String nomEtudiant, Integer noEtudiant) throws ResourceAlreadyExistsException
+    // besoin de refactorer int en Integer car utilisation de la généricité par Cucumber Java 8
     {
-        studentRegistry.addStudent(nomEtudiant, noEtudiant);
+        studentRegistry.updateStudent(noEtudiant, nomEtudiant);
         etudiant = studentRegistry.findByNumber(noEtudiant).orElse(null);
     }
 
@@ -44,7 +45,7 @@ public class BookRentalStepdefs {
 
     @Then("There is {int} in his number of rentals")
     public void thenNbRentals(Integer nbEmprunts) {
-        assertEquals(nbEmprunts, etudiant.getNombreDEmprunts());
+        assertEquals(nbEmprunts, etudiant.getEmprunts(biblio).size());
     }
 
     @When("{string} requests his number of rentals")
@@ -53,7 +54,7 @@ public class BookRentalStepdefs {
     }
 
     @When("{string} rents the book {string}")
-    public void whenRenting(String nomEtudiant, String titreLivre) {
+    public void whenRenting(String nomEtudiant, String titreLivre) throws BookAlreadyBorrowedException {
         etudiant = studentRegistry.findByName(nomEtudiant).get();
         if (biblio.getLivreDisponibleByTitle(titreLivre).isPresent()) {
             livre = biblio.getLivreDisponibleByTitle(titreLivre).get();
@@ -64,7 +65,7 @@ public class BookRentalStepdefs {
     @And("The book {string} is in a rental in the list of rentals")
     public void andNarrowedBook(String titreLivre) {
         assertTrue(
-                etudiant.getEmprunts().stream().anyMatch(emp -> emp.getLivreEmprunte().getTitre().equals(titreLivre)));
+                etudiant.getEmprunts(biblio).stream().anyMatch(emp -> emp.getLivreEmprunte().getTitre().equals(titreLivre)));
     }
 
     @And("The book {string} is unavailable")
@@ -73,7 +74,7 @@ public class BookRentalStepdefs {
     }
 
     @Given("{string} has rent the book {string}")
-    public void hasRentTheBook(String studentName, String bookTitle) {
+    public void hasRentTheBook(String studentName, String bookTitle) throws BookAlreadyBorrowedException {
         Etudiant e = studentRegistry.findByName(studentName).orElse(null);
         Livre l = biblio.getLivreDisponibleByTitle(bookTitle).get();
         biblio.emprunte(e, l);
@@ -82,7 +83,7 @@ public class BookRentalStepdefs {
     @When("{string} returns the book {string}")
     public void returnsTheBook(String studentName, String bookTitle) {
         Etudiant e = studentRegistry.findByName(studentName).orElse(null);
-        Livre l = e.getEmpruntFor(bookTitle).getLivreEmprunte();
+        Livre l = e.getEmpruntFor(bookTitle, biblio).getLivreEmprunte();
         biblio.rend(l);
     }
 

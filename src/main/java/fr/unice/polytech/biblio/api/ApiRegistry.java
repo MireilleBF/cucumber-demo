@@ -83,22 +83,17 @@ public class ApiRegistry {
                     pathParams.put(paramName, paramValue);
                 }
 
-                try {
+                GlobalExceptionHandler.callWithGlobalExceptionHandling(exchange, () -> {
                     // Ici, on crée une instance de ResponseSender qui appelle la méthode privée ; les parametres lui sont passés à partir du handler.
                     ResponseSender sender = (statusCode, response, headerParams) -> sendResponse(exchange, statusCode, response, headerParams);
                     entry.handler().handle(exchange, pathParams, sender);
-                } catch (Exception e) {
-                    GlobalExceptionHandler.handleException(exchange, e);
-                }
+                    return null;
+                });
                 return;
             }
         }
         // If no route matches
-        try {
-            sendResponse(exchange, 404, "Route not found", null);
-        } catch (Exception e) {
-            GlobalExceptionHandler.handleException(exchange, e);
-        }
+        sendResponse(exchange, HttpUtils.RESOURCE_NOT_FOUND, "Route not found", null);
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response, Map<String, String> headers) throws IOException {

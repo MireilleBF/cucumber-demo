@@ -1,10 +1,10 @@
 package fr.unice.polytech.biblio.apps;
 
 import com.sun.net.httpserver.HttpServer;
+import fr.unice.polytech.biblio.api.httphandlers.LibraryHttpHandler;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
 
-import fr.unice.polytech.biblio.api.httphandlers.LibraryHttpHandler;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;

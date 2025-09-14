@@ -4,14 +4,15 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import fr.unice.polytech.biblio.api.ApiRegistry;
 import fr.unice.polytech.biblio.api.HttpUtils;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.api.ResponseSender;
 import fr.unice.polytech.biblio.api.dtos.StudentDTO;
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.BookNotFoundException;
-import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.services.exceptions.BookAlreadyBorrowedException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,13 +79,13 @@ public class LibraryHttpHandler implements HttpHandler {
        apiRegistry.registerRoute("OPTIONS", "/api/library",
                 (exchange, pathParams, sender) -> {
                     Map<String, String> headers = new HashMap<>();
-                    sender.send(HttpUtils.OK_CODE, "", headers);
+                    sender.send(HttpUtils.OK, "", headers);
                 });
 
         apiRegistry.registerRoute("OPTIONS", "/api/library/{id}/borrow",
                 (exchange, pathParams, sender) -> {
                     Map<String, String> headers = new HashMap<>();
-                    sender.send(HttpUtils.OK_CODE, "", headers);
+                    sender.send(HttpUtils.OK, "", headers);
                 });
     }
 
@@ -96,45 +97,42 @@ public class LibraryHttpHandler implements HttpHandler {
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
 
-        try {
-            apiRegistry.dispatch(exchange);
-        } catch (Exception e) {
-            GlobalExceptionHandler.handleException(exchange, e);
-        }
+        apiRegistry.dispatch(exchange);
     }
 
 
-    public void askToBorrowBook(HttpExchange exchange, String bookId, ResponseSender sender) throws IOException, BookNotFoundException, StudentNotFoundException {
+    public void askToBorrowBook(HttpExchange exchange, String bookId, ResponseSender sender)
+            throws IOException, ResourceNotFoundException, BookAlreadyBorrowedException {
             InputStream is = exchange.getRequestBody();
             String jsonBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             StudentDTO sto = JaxsonUtils.fromJson(jsonBody, StudentDTO.class);
             validateStudentDTO(sto);
 
             int studentNumber = sto.studentNumber();
-            //It can throw a BookNotFoundException
+            //It can throw a ResourceNotFoundException
             Livre book = bibliotheque.getLivreParBiblioId(bookId);
 
             var student = studentRegistry.findByNumber(studentNumber);
             if (student.isEmpty()) {
-                throw  new StudentNotFoundException("This student does not exist");
+                throw  new ResourceNotFoundException("This student does not exist");
             }
 
             Etudiant e = student.get();
-            boolean borrowed = bibliotheque.emprunte(e, book);
-            logger.log(Level.FINE, "Statut de l'emprunt: " + borrowed);
+            // It can throw an Exception if the book is not available
+            // or if the same book is already borrowed by the student
+            bibliotheque.emprunte(e, book);
+            logger.log(Level.FINE, "Emprunt effectué");
             //build the response
-            if (!borrowed) {
-                throw  new BookNotFoundException("This Book cannot be borrowed");
-            }
             String response = "Book borrowed";
             //send the response to the client
             Map<String, String> headers = new HashMap<>();
             headers.put(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
-            sender.send(HttpUtils.CREATED_CODE,response,headers);
+            sender.send(HttpUtils.CREATED,response,headers);
     }
 
 
-    public void askToCreateBook(HttpExchange exchange, ResponseSender sender) throws IOException {
+    public void askToCreateBook(HttpExchange exchange, ResponseSender sender)
+            throws IOException {
             InputStream is = exchange.getRequestBody();
             String jsonBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             Livre livre = JaxsonUtils.fromJson(jsonBody, Livre.class);
@@ -146,36 +144,30 @@ public class LibraryHttpHandler implements HttpHandler {
             Map<String, String> headers = new HashMap<>();
             headers.put(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
             String response = "Book created";
-            sender.send(201,response,headers);
+            sender.send(HttpUtils.CREATED,response,headers);
     }
 
 
-    public void answerWithBook(HttpExchange exchange, String id, ResponseSender sender) throws IOException {
-        try {
+    public void answerWithBook(HttpExchange exchange, String id, ResponseSender sender)
+            throws IOException, ResourceNotFoundException {
             Livre livre = bibliotheque.getLivreParBiblioId(id);
 
             Map<String, String> headers = new HashMap<>();
             headers.put(HttpUtils.CONTENT_TYPE,HttpUtils.APPLICATION_JSON);
 
             String response = JaxsonUtils.toJson(livre);
-            sender.send(HttpUtils.OK_CODE,response,headers);
-        } catch (BookNotFoundException e) {
-            Map<String, String> headers = new HashMap<>();
-            String response = "{\"error\": \"Book not found\"}";
-            headers.put("Content-Type", "application/json");
-            sender.send(HttpUtils.NOT_FOUND_RESOURCE,response,headers);
-        }
-
+            sender.send(HttpUtils.OK,response,headers);
     }
 
-    public void answerWithAllBooks(HttpExchange exchange,ResponseSender responseSender) throws IOException {
+    public void answerWithAllBooks(HttpExchange exchange,ResponseSender responseSender)
+            throws IOException {
         List<Livre> livres = bibliotheque.getLivres();
 
         Map<String, String> headers = new HashMap<>();
         headers.put(HttpUtils.CONTENT_TYPE, HttpUtils.APPLICATION_JSON);
 
         String response = JaxsonUtils.toJson(livres);
-        responseSender.send(HttpUtils.OK_CODE, response,headers);
+        responseSender.send(HttpUtils.OK, response,headers);
     }
 
 

@@ -2,7 +2,6 @@ package fr.unice.polytech.biblio.apps.httphandlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import fr.unice.polytech.biblio.api.ApiRegistry;
-import fr.unice.polytech.biblio.api.httphandlers.GlobalExceptionHandler;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -39,8 +38,8 @@ class ApiRegistryTest {
                     System.err.println("Échec: Le handler n'a pas été appelé.");
                 }
             } catch (Exception e) {
-                //e.printStackTrace();
-                GlobalExceptionHandler.handleException(exchange, e);
+                System.err.println("Erreur: exception inconnue lors du dispatch.");
+                e.printStackTrace();
             }
         }
 

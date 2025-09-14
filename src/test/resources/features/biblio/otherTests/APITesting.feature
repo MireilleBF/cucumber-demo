@@ -41,7 +41,7 @@ Feature: Testing a REST API to deal with books library
     Given a book of title "Never Let Me Go" with id "NLMG-0" has been registered and is not available
     When the student with id 679 books the book with id "NLMG-0"
     Then the server should return a failure status
-    And the server should return a message "{\"error\": \"This Book cannot be borrowed\"}"
+    And the server should return a message "{\"error\": \"Book NLMG-0 already borrowed\"}"
     And the number of loans has not changed for the student with the student number 679
 
   # Une tentative de réservation d'un livre pour un étudiant inexistant

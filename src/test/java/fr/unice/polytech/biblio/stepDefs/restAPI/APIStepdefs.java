@@ -1,17 +1,19 @@
 package fr.unice.polytech.biblio.stepDefs.restAPI;
 
 import com.sun.net.httpserver.HttpServer;
-import fr.unice.polytech.biblio.api.dtos.StudentDTO;
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.BookNotFoundException;
-import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Etudiant;
-import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.api.HttpUtils;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.api.dtos.StudentDTO;
 import fr.unice.polytech.biblio.apps.SimpleHttpServer4Library;
 import fr.unice.polytech.biblio.apps.SimpleHttpServer4Scolarity;
-import fr.unice.polytech.biblio.api.HttpUtils;
-import io.cucumber.java.AfterAll;
+import fr.unice.polytech.biblio.entities.Etudiant;
+import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -36,11 +38,11 @@ public class APIStepdefs {
     private static int PORT4SCOLARITY = 8001;
     private static String BASE_URL4LIBRARY ;
 
-    static HttpServer scolarity;
-    static HttpServer library;
+    HttpServer scolarity;
+    HttpServer library;
 
-    static StudentRegistry studentRegistry = new StudentRegistry();
-    static Bibliotheque biblio = new Bibliotheque();
+    StudentRegistry studentRegistry;
+    Bibliotheque biblio;
 
     static Logger logger = Logger.getLogger("APIStepdefs");
     {
@@ -48,8 +50,7 @@ public class APIStepdefs {
     }
 
     @BeforeAll
-    public static void setup() throws IOException {
-        logger.info("Je démarre les serveurs");
+    public static void setup() {
         //@MI TODO
         PORT4LIBRARY = SimpleHttpServer4Library.findFreePortFrom(PORT4LIBRARY);
         System.out.println("Port " + "PORT4LIBRARY" + " est " + PORT4LIBRARY);
@@ -57,14 +58,20 @@ public class APIStepdefs {
 
         PORT4SCOLARITY = SimpleHttpServer4Scolarity.findFreePortFrom(PORT4SCOLARITY);
         System.out.println("Port " + "PORT4SCOLARITY" + " est " + PORT4SCOLARITY);
+    }
 
+    @Before
+    public void beforeEach() throws IOException {
+        logger.info("Je démarre les serveurs");
+        biblio = new Bibliotheque();
+        studentRegistry = new StudentRegistry();
         scolarity = SimpleHttpServer4Scolarity.startServer(PORT4SCOLARITY, studentRegistry);
         library = SimpleHttpServer4Library.startServer(PORT4LIBRARY, biblio, studentRegistry);
     }
 
-    @AfterAll
-    public static void teardown() {
-        // Arrêter le serveur après les tests
+    @After
+    public void teardown() {
+        // Arrêter le serveur après chaque test
         logger.info("J arrete les serveurs");
         if (scolarity != null) {
             scolarity.stop(0);
@@ -108,7 +115,7 @@ public class APIStepdefs {
     public void a_book_of_title_with_id_has_not_been_registered(String title, String id) {
         try {
             biblio.getLivreParBiblioId(id);
-        } catch (BookNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return;
         }
         throw new IllegalStateException("Book with id " + id + " already exists");
@@ -118,7 +125,7 @@ public class APIStepdefs {
         Livre l;
         try {
             l = biblio.getLivreParBiblioId(bookId);
-        } catch (BookNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             l = Livre.createLivre(title, bookId);
         }
         biblio.addLivre(l);
@@ -143,13 +150,13 @@ public class APIStepdefs {
     int previousNumberOfLoans;
 
     @Given("a registered student named {string} with student number {int}")
-    public void a_student_named_and_with_student_number_was_registered(String name, Integer id) {
+    public void a_student_named_and_with_student_number_was_registered(String name, Integer id) throws ResourceAlreadyExistsException {
         var student = a_student_has_been_registered(name, id);
-        previousNumberOfLoans = student.getNombreDEmprunts();
+        previousNumberOfLoans = student.getEmprunts(biblio).size();
 
     }
 
-    private Etudiant a_student_has_been_registered(String name, Integer ident) {
+    private Etudiant a_student_has_been_registered(String name, Integer ident) throws ResourceAlreadyExistsException {
         Optional<Etudiant> student = studentRegistry.findByNumber(ident);
         if (student.isPresent()) {
             return student.get();
@@ -161,7 +168,13 @@ public class APIStepdefs {
 
     @Given("a student of name {string} and with student id {int} has not been registered")
     public void a_student_of_name_and_with_student_id_has_not_been_registered(String name, Integer ident) {
-        studentRegistry.findByNumber(ident).ifPresent(student -> studentRegistry.removeStudent(ident));
+        studentRegistry.findByNumber(ident).ifPresent(student -> {
+            try {
+                studentRegistry.removeStudent(ident);
+            } catch (ResourceNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     HttpResponse<String> response;
@@ -235,7 +248,10 @@ public class APIStepdefs {
     @Then("the server should return a failure status")
     public void the_server_should_return_a_failure_status() {
         int statuscode = response.statusCode();
-        assertTrue(statuscode == HttpUtils.BAD_REQUEST || statuscode == HttpUtils.NOT_FOUND_RESOURCE);
+        assertTrue(statuscode == HttpUtils.BAD_REQUEST ||
+                statuscode == HttpUtils.RESOURCE_NOT_FOUND ||
+                statuscode == HttpUtils.CONFLICT ||
+                statuscode == HttpUtils.UNPROCESSABLE_ENTITY);
     }
 
     @Then("a book of title {string} is registered in the library")
@@ -276,24 +292,24 @@ public class APIStepdefs {
     @Then("There is one more loan for the student with the student number {int}")
     public void there_is_one_more_loan_for_the_student_with_the_student_number(Integer id) {
         var student = studentRegistry.findByNumber(id).get();
-        assertEquals(previousNumberOfLoans + 1, student.getNombreDEmprunts());
+        assertEquals(previousNumberOfLoans + 1, student.getEmprunts(biblio).size());
     }
 
     @Then("the number of loans has not changed for the student with the student number {int}")
     public void no_more_loan_for_the_student_with_the_student_number(Integer id) {
         var student = studentRegistry.findByNumber(id).get();
-        assertEquals(previousNumberOfLoans, student.getNombreDEmprunts());
+        assertEquals(previousNumberOfLoans, student.getEmprunts(biblio).size());
 
     }
 
     @Then("The book with id {string} is no longer available")
-    public void the_book_with_id_is_no_longer_available(String bookId) throws BookNotFoundException {
+    public void the_book_with_id_is_no_longer_available(String bookId) throws ResourceNotFoundException {
         var book = biblio.getLivreParBiblioId(bookId);
         assertTrue(book.estEmprunte());
     }
 
     @Then("the book with id {string} is still available")
-    public void the_book_with_id_is_still_available(String bookId) throws BookNotFoundException {
+    public void the_book_with_id_is_still_available(String bookId) throws ResourceNotFoundException {
         var book = biblio.getLivreParBiblioId(bookId);
         assertFalse(book.estEmprunte());
     }

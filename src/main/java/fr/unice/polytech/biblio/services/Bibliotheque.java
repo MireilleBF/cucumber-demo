@@ -4,6 +4,8 @@ import fr.unice.polytech.biblio.entities.Emprunt;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
 import fr.unice.polytech.biblio.repositories.BookRepository;
+import fr.unice.polytech.biblio.services.exceptions.BookAlreadyBorrowedException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -20,8 +22,6 @@ public class Bibliotheque {
 	// Nous séparons les étudiants et les livres
 	// La bibliothèque ne connait que les livres mais interagit avec les étudiants
 	// pour les emprunts
-	// @Todo : Ce point devrait être amélioré, en ne mettant aucune information
-	// concernant les emprunts dans étudiant.
 
     //BookRepository gère la persistance des livres
 	private BookRepository bookRepository = new BookRepository();
@@ -59,16 +59,14 @@ public class Bibliotheque {
         return target;
 	}
 
-
     public List<Livre> getLivresByTitle(String titre) {
         return bookRepository.getBooksByTitle(titre);
     }
 
-
-    public Livre getLivreParBiblioId(String id) throws BookNotFoundException {
+    public Livre getLivreParBiblioId(String id) throws ResourceNotFoundException {
         var livre = bookRepository.getBookByLibraryId(id);
         if (livre == null) {
-            throw new BookNotFoundException("Book not found");
+            throw new ResourceNotFoundException("Book not found");
         }
         return livre;
     }
@@ -81,21 +79,30 @@ public class Bibliotheque {
                         .findAny();
 	}
 
-
-	public boolean emprunte(Etudiant e, Livre l) {
+	// on considère que e et l sont non nuls et récupérés depuis un repository
+	// On pourrait ajouter des vérifications
+	public void emprunte(Etudiant e, Livre l) throws BookAlreadyBorrowedException {
 		if (l.estEmprunte()) {
-			return false;
+			throw new BookAlreadyBorrowedException("Book " + l.getIdDansBiblio() + " already borrowed");
+		}
+		Optional<Emprunt> autreExemplaireEmprunteOpt = getEmpruntsByStudent(e).stream().filter(emp -> emp.getLivreEmprunte().estUnExemplaireDuMemeLivre(l)).findFirst();
+		if (autreExemplaireEmprunteOpt.isPresent()) {
+			// l'étudiant emprunte déjà un autre exemplaire de ce livre
+			throw new BookAlreadyBorrowedException("Same book " + autreExemplaireEmprunteOpt.get().getLivreEmprunte().getIdDansBiblio() + " already borrowed");
 		}
 		Emprunt emprunt = new Emprunt(LocalDate.now().plusDays(DUREE_MAX_EMPRUNT), e, l);
 		emprunts.put(l, emprunt);
 		l.setEstEmprunte(true);
-        //Il faudrait éviter cette dépendance entre Etudiant et Bibliotheque
-		e.addEmprunt(emprunt);
-		return true;
 	}
 
 	public Emprunt getEmpruntByLivre(Livre l) {
         return emprunts.get(l);
+	}
+
+	public List<Emprunt> getEmpruntsByStudent(Etudiant e) {
+		return emprunts.values().stream()
+				.filter(emprunt -> emprunt.getEmprunteur().equals(e))
+				.toList();
 	}
 
 	public boolean rend(Livre l) {
@@ -104,8 +111,6 @@ public class Bibliotheque {
 		}
 		Emprunt emprunt = emprunts.remove(l);
 		l.setEstEmprunte(false);
-        //Il faudrait éviter cette dépendance entre Etudiant et Bibliotheque
-		emprunt.getEmprunteur().removeEmprunt(emprunt);
 		return true;
 	}
 

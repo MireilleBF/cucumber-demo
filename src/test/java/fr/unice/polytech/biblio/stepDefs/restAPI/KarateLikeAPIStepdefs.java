@@ -2,12 +2,15 @@ package fr.unice.polytech.biblio.stepDefs.restAPI;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sun.net.httpserver.HttpServer;
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Livre;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.apps.SimpleHttpServer4Library;
 import fr.unice.polytech.biblio.apps.SimpleHttpServer4Scolarity;
+import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,10 +19,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
