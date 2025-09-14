@@ -169,7 +169,7 @@ class LibraryHttpHandlerTest {
         }
 
         @Test
-        void testBorrowBookFailedWhenBookNotFound() throws IOException, InterruptedException {
+        void testBorrowBookFailsWhenBookNotFound() throws IOException, InterruptedException {
                 var client = HttpClient.newHttpClient();
                 var uri = URI.create(BASE_URL + "/J-100/borrow");
                 StudentDTO dto = new StudentDTO(123456);
@@ -188,5 +188,78 @@ class LibraryHttpHandlerTest {
                 logger.log(Level.FINE, response.body());
 
                 assertEquals("{\"error\": \"Book not found\"}", response.body());
+        }
+
+        @Test
+        void testBorrowBookFailsWhenBookAlreadyBorrowed() throws IOException, InterruptedException {
+                var client = HttpClient.newHttpClient();
+                var uri = URI.create(BASE_URL + "/J-1/borrow");
+                StudentDTO dto = new StudentDTO(123456);
+                String jsonDTO = JaxsonUtils.toJson(dto);
+                logger.log(Level.FINE, "Json before : " + jsonDTO);
+                var response1 = client.send(
+                                HttpRequest.newBuilder()
+                                                .POST(HttpRequest.BodyPublishers.ofString(jsonDTO))
+                                                .uri(uri)
+                                                .build(),
+                                HttpResponse.BodyHandlers.ofString());
+
+                String jsonMimeType = "text/plain";
+                assertEquals(HttpUtils.CREATED, response1.statusCode());
+                assertEquals(jsonMimeType, response1.headers().firstValue("Content-Type").orElse(""));
+                logger.log(Level.FINE, response1.body());
+
+                assertEquals("Book borrowed", response1.body());
+
+                // Second attempt to borrow the same book
+                var response2 = client.send(
+                                HttpRequest.newBuilder()
+                                                .POST(HttpRequest.BodyPublishers.ofString(jsonDTO))
+                                                .uri(uri)
+                                                .build(),
+                                HttpResponse.BodyHandlers.ofString());
+
+                assertEquals(HttpUtils.UNPROCESSABLE_ENTITY, response2.statusCode());
+                assertEquals(HttpUtils.APPLICATION_JSON, response2.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
+                logger.log(Level.FINE, response2.body());
+
+                assertEquals("{\"error\": \"Book J-1 already borrowed\"}", response2.body());
+        }
+
+        @Test
+        void testBorrowBookFailsWhenSameBookAlreadyBorrowedByStudent() throws IOException, InterruptedException {
+                var client = HttpClient.newHttpClient();
+                var uri1 = URI.create(BASE_URL + "/U-0/borrow");
+                var uri2 = URI.create(BASE_URL + "/U-4/borrow");
+                StudentDTO dto = new StudentDTO(123456);
+                String jsonDTO = JaxsonUtils.toJson(dto);
+                logger.log(Level.FINE, "Json before : " + jsonDTO);
+                var response1 = client.send(
+                                HttpRequest.newBuilder()
+                                                .POST(HttpRequest.BodyPublishers.ofString(jsonDTO))
+                                                .uri(uri1)
+                                                .build(),
+                                HttpResponse.BodyHandlers.ofString());
+
+                String jsonMimeType = "text/plain";
+                assertEquals(HttpUtils.CREATED, response1.statusCode());
+                assertEquals(jsonMimeType, response1.headers().firstValue("Content-Type").orElse(""));
+                logger.log(Level.FINE, response1.body());
+
+                assertEquals("Book borrowed", response1.body());
+
+                // Second attempt to borrow the same book (different copy)
+                var response2 = client.send(
+                                HttpRequest.newBuilder()
+                                                .POST(HttpRequest.BodyPublishers.ofString(jsonDTO))
+                                                .uri(uri2)
+                                                .build(),
+                                HttpResponse.BodyHandlers.ofString());
+
+                assertEquals(HttpUtils.UNPROCESSABLE_ENTITY, response2.statusCode());
+                assertEquals(HttpUtils.APPLICATION_JSON, response2.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
+                logger.log(Level.FINE, response2.body());
+
+                assertEquals("{\"error\": \"Same book U-0 already borrowed\"}", response2.body());
         }
 }

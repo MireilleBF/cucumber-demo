@@ -289,7 +289,7 @@ public class APIStepdefs {
         assertTrue(int1 <= livres.size());
     }
 
-    @Then("There is one more loan for the student with the student number {int}")
+    @Then("there is one more loan for the student with the student number {int}")
     public void there_is_one_more_loan_for_the_student_with_the_student_number(Integer id) {
         var student = studentRegistry.findByNumber(id).get();
         assertEquals(previousNumberOfLoans + 1, student.getEmprunts(biblio).size());
@@ -302,7 +302,7 @@ public class APIStepdefs {
 
     }
 
-    @Then("The book with id {string} is no longer available")
+    @Then("the book with id {string} is no longer available")
     public void the_book_with_id_is_no_longer_available(String bookId) throws ResourceNotFoundException {
         var book = biblio.getLivreParBiblioId(bookId);
         assertTrue(book.estEmprunte());

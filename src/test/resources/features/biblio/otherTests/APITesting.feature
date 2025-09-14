@@ -23,8 +23,8 @@ Feature: Testing a REST API to deal with books library
     Given a book of title "Never Let Me Go" with id "NLMG-0" has been registered and is available
     When the student with id 699 books the book with id "NLMG-0"
     Then the server should return a success status
-    And There is one more loan for the student with the student number 699
-    And The book with id "NLMG-0" is no longer available
+    And there is one more loan for the student with the student number 699
+    And the book with id "NLMG-0" is no longer available
 
   # une tentative de réservation d'un livre inexistant
   Scenario: A student tries to book a non existing book
@@ -43,6 +43,18 @@ Feature: Testing a REST API to deal with books library
     Then the server should return a failure status
     And the server should return a message "{\"error\": \"Book NLMG-0 already borrowed\"}"
     And the number of loans has not changed for the student with the student number 679
+
+   # une tentative de réservation d'un second exemplaire du même livre par le même étudiant
+  Scenario: A student tries to book a second copy of the same book
+    Given a registered student named "Paul" with student number 678
+    Given a book of title "Never Let Me Go" with id "NLMG-0" has been registered and is available
+    Given a book of title "Never Let Me Go" with id "NLMG-1" has been registered and is available
+    When the student with id 678 books the book with id "NLMG-0"
+    And the student with id 678 books the book with id "NLMG-1"
+    Then the server should return a failure status
+    And the server should return a message "{\"error\": \"Same book NLMG-0 already borrowed\"}"
+    And there is one more loan for the student with the student number 678
+    And the book with id "NLMG-1" is still available
 
   # Une tentative de réservation d'un livre pour un étudiant inexistant
   Scenario: A non existing student tries to book a book

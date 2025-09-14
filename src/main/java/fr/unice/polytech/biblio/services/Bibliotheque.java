@@ -118,6 +118,4 @@ public class Bibliotheque {
 		return new ArrayList<>(emprunts.values());
 	}
 
-
-
 }
