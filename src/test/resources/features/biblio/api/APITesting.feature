@@ -1,7 +1,8 @@
 Feature: Testing a REST API to deal with books library
-  Description: the purpose of these tests are to cover End to End flows for Users (not necessarely Library members)
+  Description: the purpose of these tests are to cover End to End flows for Users (not necessarily Library members)
 
-  Background: User are allowed to access (to deal with CORS)
+  Background:
+    Given the API test servers are configured and started
     Given 3 books are at least already registered in the library
     Given 2 students are at least already registered by the scolarship service
 

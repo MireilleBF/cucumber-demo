@@ -100,7 +100,6 @@ public class SimpleHttpServer4Library {
      */
     public static HttpServer startServer(int port, Bibliotheque bibliotheque, StudentRegistry studentRegistry) throws IOException {
             HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-            //Mireille 2025-09-06
             server.createContext("/api/library", new LibraryHttpHandler(bibliotheque, studentRegistry));
             server.setExecutor(null); // creates a default executor
             server.start();

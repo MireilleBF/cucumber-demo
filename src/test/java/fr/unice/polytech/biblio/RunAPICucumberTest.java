@@ -11,10 +11,13 @@ import static io.cucumber.core.options.Constants.PLUGIN_PROPERTY_NAME;
 @Suite
 @IncludeEngines("cucumber")
 
-@SelectPackages("features.biblio")
+@SelectPackages("features.biblio.api")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "fr.unice.polytech.biblio.stepDefs")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "fr.unice.polytech.biblio.stepDefs.restAPI")
 
-public class RunCucumberTest {
-    // will run all features found on the configuration
+public class RunAPICucumberTest {
+    /*
+     This enables the servers setup (port definition, etc.) to be done only for these tests.
+     A specific Hook class defines the common Before/After methods for all stepdefs in these packages.
+     */
 }

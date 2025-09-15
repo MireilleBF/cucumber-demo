@@ -1,20 +1,14 @@
 package fr.unice.polytech.biblio.stepDefs.restAPI;
 
-import com.sun.net.httpserver.HttpServer;
 import fr.unice.polytech.biblio.api.HttpUtils;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.api.dtos.StudentDTO;
-import fr.unice.polytech.biblio.apps.SimpleHttpServer4Library;
-import fr.unice.polytech.biblio.apps.SimpleHttpServer4Scolarity;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
 import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.BeforeAll;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -34,54 +28,22 @@ import static org.junit.jupiter.api.Assertions.*;
 //todo: replace rentals by loans in all the project
 public class APIStepdefs {
 
-    private static int PORT4LIBRARY = 8000;
-    private static int PORT4SCOLARITY = 8001;
-    private static String BASE_URL4LIBRARY ;
-
-    HttpServer scolarity;
-    HttpServer library;
-
-    StudentRegistry studentRegistry;
-    Bibliotheque biblio;
-
     static Logger logger = Logger.getLogger("APIStepdefs");
     {
         logger.setLevel(Level.OFF);
     }
 
-    @BeforeAll
-    public static void setup() {
-        //@MI TODO
-        PORT4LIBRARY = SimpleHttpServer4Library.findFreePortFrom(PORT4LIBRARY);
-        System.out.println("Port " + "PORT4LIBRARY" + " est " + PORT4LIBRARY);
-        BASE_URL4LIBRARY = "http://localhost:" + PORT4LIBRARY + "/api/library";
+    private static String BASE_URL4LIBRARY;
+    StudentRegistry studentRegistry;
+    Bibliotheque biblio;
 
-        PORT4SCOLARITY = SimpleHttpServer4Scolarity.findFreePortFrom(PORT4SCOLARITY);
-        System.out.println("Port " + "PORT4SCOLARITY" + " est " + PORT4SCOLARITY);
+    @Given("the API test servers are configured and started")
+    public void theTestServersAreConfiguredAndStarted() {
+        BASE_URL4LIBRARY = TestContext.getBASE_URL4LIBRARY();
+        studentRegistry = TestContext.getStudentRegistry();
+        biblio = TestContext.getBiblio();
     }
 
-    @Before
-    public void beforeEach() throws IOException {
-        logger.info("Je démarre les serveurs");
-        biblio = new Bibliotheque();
-        studentRegistry = new StudentRegistry();
-        scolarity = SimpleHttpServer4Scolarity.startServer(PORT4SCOLARITY, studentRegistry);
-        library = SimpleHttpServer4Library.startServer(PORT4LIBRARY, biblio, studentRegistry);
-    }
-
-    @After
-    public void teardown() {
-        // Arrêter le serveur après chaque test
-        logger.info("J arrete les serveurs");
-        if (scolarity != null) {
-            scolarity.stop(0);
-        }
-        if (library != null) {
-            library.stop(0);
-        }
-    }
-
-    /** Given statements about the books in the library */
     @Given("{int} books are at least already registered in the library")
     public void n_BooksAreAlreadyRegisteredInTheLibrary(Integer numberOfBooks) {
         // By default the server is started with at least 3 books
@@ -316,4 +278,5 @@ public class APIStepdefs {
     public void the_server_should_return_a_message(String message) {
         assertEquals(message, response.body());
     }
+
 }
