@@ -23,7 +23,7 @@
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erreur du serveur');
+                    throw new Error('Erreur du serveur - status=' + response.status);
                 }
                 return response.text();
             })
