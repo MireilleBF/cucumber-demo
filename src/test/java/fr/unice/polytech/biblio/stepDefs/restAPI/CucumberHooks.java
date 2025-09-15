@@ -24,7 +24,7 @@ public class CucumberHooks {
         int port4Library = SimpleHttpServer4Library.findFreePortFrom(TestContext.getPORT4LIBRARY());
         TestContext.setPORT4LIBRARY(port4Library);
         System.out.println("Port PORT4LIBRARY est " + port4Library);
-        TestContext.setBASE_URL4LIBRARY("http://localhost:" + port4Library + "/api/library");
+        TestContext.setBASE_URL4LIBRARY("http://localhost:" + port4Library + "/api/books");
 
         int port4Scolarity = SimpleHttpServer4Scolarity.findFreePortFrom(TestContext.getPORT4SCOLARITY());
         TestContext.setPORT4SCOLARITY(port4Scolarity);

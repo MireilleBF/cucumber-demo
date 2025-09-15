@@ -18,13 +18,13 @@ import java.util.logging.Logger;
    * This class is a simple HTTP server that can be used to serve a library.
    * The server will be listening on port 8000.
    * The server will be able to manage the following requests:
-   * - GET /api/library : return the list of all books
-   * - POST /api/library : add a new book
-   * - GET /api/library/{id} : return the book with the given id
-   * - PUT /api/library/{id} : update the book with the given id
-   * - DELETE /api/library/{id} : delete
+   * - GET /api/books : return the list of all books
+   * - POST /api/books : add a new book
+   * - GET /api/books/{id} : return the book with the given id
+   * - PUT /api/books/{id} : update the book with the given id
+   * - DELETE /api/books/{id} : delete
    * and to borrow a book
-   * - POST /api/library/{id}/borrow : borrow the book with the given id to the student with the given student number
+   * - POST /api/books/{id}/borrow : borrow the book with the given id to the student with the given student number
    * The server will be able to manage the following books:
    * - id : the identifier of the book
    * - title : the title of the book
@@ -100,7 +100,7 @@ public class SimpleHttpServer4Library {
      */
     public static HttpServer startServer(int port, Bibliotheque bibliotheque, StudentRegistry studentRegistry) throws IOException {
             HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
-            server.createContext("/api/library", new LibraryHttpHandler(bibliotheque, studentRegistry));
+            server.createContext("/api/books", new LibraryHttpHandler(bibliotheque, studentRegistry));
             server.setExecutor(null); // creates a default executor
             server.start();
             servers.put(port,server);

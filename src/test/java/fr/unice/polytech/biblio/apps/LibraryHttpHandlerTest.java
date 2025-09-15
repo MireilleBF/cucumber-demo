@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LibraryHttpHandlerTest {
 
         private static final int PORT = 8003;
-        private static final String BASE_URL = "http://localhost:" + PORT + "/api/library";
+        private static final String BASE_URL = "http://localhost:" + PORT + "/api/books";
 
         StudentRegistry studentRegistry;
         Bibliotheque biblio;

@@ -36,7 +36,7 @@ class  apps.SimpleHttpServer4Library {
 + {static} HttpServer getServer(int)
 }
 
-SimpleHttpServer4Library ..> "1\n /api/library" api.httphandlers.LibraryHttpHandler
+SimpleHttpServer4Library ..> "1\n /api/books" api.httphandlers.LibraryHttpHandler
 SimpleHttpServer4Library ..> "1\n /api/members" api.httphandlers.MembersHttpHandler
 
 

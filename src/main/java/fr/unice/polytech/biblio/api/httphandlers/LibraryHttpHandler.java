@@ -30,12 +30,12 @@ import java.util.logging.Logger;
 /**
  * This class is used to manage the library.
  * It handles the following requests:
- * - GET /api/library : return the list of all books
- * - POST /api/library : add a new book
- * - GET /api/library/{id} : return the book with the given id
+ * - GET /api/books : return the list of all books
+ * - POST /api/books : add a new book
+ * - GET /api/books/{id} : return the book with the given id
  * <p>
  * and to borrow a book
- * - POST /api/library/{id}/borrow : borrow the book with the given id to the student with the given student number
+ * - POST /api/books/{id}/borrow : borrow the book with the given id to the student with the given student number
  */
 public class LibraryHttpHandler implements HttpHandler {
     private final ApiRegistry apiRegistry = new ApiRegistry();
@@ -57,32 +57,32 @@ public class LibraryHttpHandler implements HttpHandler {
     }
 
     private void initializeApiRegistry() {
-        apiRegistry.registerRoute("GET", "/api/library",
+        apiRegistry.registerRoute("GET", "/api/books",
                 (exchange, pathParams,sender) -> {
                         answerWithAllBooks(exchange,sender);
                     });
-        apiRegistry.registerRoute("GET", "/api/library/{id}",
+        apiRegistry.registerRoute("GET", "/api/books/{id}",
                 (exchange, pathParams,sender) -> {
                     String id = pathParams.get("id");
                     validateId(id);
                     answerWithBook(exchange, id,sender);
                 });
-        apiRegistry.registerRoute("POST", "/api/library",
+        apiRegistry.registerRoute("POST", "/api/books",
                 (exchange, pathParams,sender ) -> askToCreateBook(exchange, sender));
-        apiRegistry.registerRoute("POST", "/api/library/{id}/borrow",
+        apiRegistry.registerRoute("POST", "/api/books/{id}/borrow",
                 (exchange, pathParams, sender) -> {
                     String id = pathParams.get("id");
                     validateId(id);
                     askToBorrowBook(exchange, id,sender);
                 });
 
-       apiRegistry.registerRoute("OPTIONS", "/api/library",
+       apiRegistry.registerRoute("OPTIONS", "/api/books",
                 (exchange, pathParams, sender) -> {
                     Map<String, String> headers = new HashMap<>();
                     sender.send(HttpUtils.OK, "", headers);
                 });
 
-        apiRegistry.registerRoute("OPTIONS", "/api/library/{id}/borrow",
+        apiRegistry.registerRoute("OPTIONS", "/api/books/{id}/borrow",
                 (exchange, pathParams, sender) -> {
                     Map<String, String> headers = new HashMap<>();
                     sender.send(HttpUtils.OK, "", headers);

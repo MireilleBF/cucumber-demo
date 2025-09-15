@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 class IntegrationOfScolarityTest {
 
     private static final int PORT = 8003;
-    private static final String BASE_URL = "http://localhost:" + PORT + "/api/library";
+    private static final String BASE_URL = "http://localhost:" + PORT + "/api/books";
 
     StudentRegistry studentRegistry;
     Bibliotheque biblio;
