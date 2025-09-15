@@ -5,7 +5,6 @@ import fr.unice.polytech.biblio.entities.Livre;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.services.exceptions.BookAlreadyBorrowedException;
-import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -18,19 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Ph. Collet
  *
  */
-public class BookRentalStepdefs {
+public class BookLoanStepdefs {
 
     StudentRegistry studentRegistry = new StudentRegistry();
     Bibliotheque biblio = new Bibliotheque();
     Etudiant etudiant;
     Livre livre;
 
-    public BookRentalStepdefs() {
+    public BookLoanStepdefs() {
     } // implementation des steps dans le constructeur (aussi possible dans des
       // méthodes)
 
     @Given("a student of name {string} and with student id {int}")
-    public void givenAStudent(String nomEtudiant, Integer noEtudiant) throws ResourceAlreadyExistsException
+    public void givenAStudent(String nomEtudiant, Integer noEtudiant)
     // besoin de refactorer int en Integer car utilisation de la généricité par Cucumber Java 8
     {
         studentRegistry.updateStudent(noEtudiant, nomEtudiant);
@@ -43,12 +42,12 @@ public class BookRentalStepdefs {
         biblio.addLivre(liv);
     }
 
-    @Then("There is {int} in his number of rentals")
+    @Then("There is {int} in his number of loans")
     public void thenNbRentals(Integer nbEmprunts) {
         assertEquals(nbEmprunts, etudiant.getEmprunts(biblio).size());
     }
 
-    @When("{string} requests his number of rentals")
+    @When("{string} requests his number of loans")
     public void whenRequestsRentals(String nomEtudiant) {
         etudiant = studentRegistry.findByName(nomEtudiant).orElse(null);
     }
@@ -62,7 +61,7 @@ public class BookRentalStepdefs {
         }
     }
 
-    @And("The book {string} is in a rental in the list of rentals")
+    @And("The book {string} is in a loan in the list of loans")
     public void andNarrowedBook(String titreLivre) {
         assertTrue(
                 etudiant.getEmprunts(biblio).stream().anyMatch(emp -> emp.getLivreEmprunte().getTitre().equals(titreLivre)));

@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//todo: replace rentals by loans in all the project
 public class APIStepdefs {
 
     static Logger logger = Logger.getLogger("APIStepdefs");
