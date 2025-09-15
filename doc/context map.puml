@@ -1,0 +1,62 @@
+@startuml
+'!theme spacelab
+
+title Context Map - STEats System
+
+' Bounded Contexts
+package "Catalog & Menus managment" as Catalog #A9DCDF{
+'  [Restaurant]
+ ' [Menu]
+'  [Dish]
+'  [Dish Option]
+'  [Capacity]
+}
+
+
+package "Ordering" as Ordering #A9DCDF {
+ ' [Order]
+ ' [Order Line]
+  '[Registered User]
+}
+
+package "Paying" as Paying  #A9DCDF{
+  '[Payment]
+  '[Student Credit]
+}
+
+package "Statistics Managment " as Statistics {
+  '[Statistics]
+}
+
+package "AI" as AI #ADD1B2{
+ ' [Photo]
+}
+
+package "Identity & Access" as Identity {
+}
+
+' Delivery / Logistics
+package "Deliverying" as Delivery {
+'  [Delivery]
+'  [Courier]
+'  [Delivery Slot]
+}
+
+' Relations
+Identity --> Ordering : Authenticates \n Registered Users
+Ordering --> Delivery : Requests Delivery \n for Orders
+Delivery --> Statistics : Traces \n Delivery Performance Data
+
+
+Catalog --> Ordering : Provides \n Menus & Capacities
+Ordering --> Paying : Provides Amount\n & Order State
+Paying --> Ordering : "Validates\n Payment Success"
+Ordering --> Statistics : "Traces\n OrderValidated"
+Paying --> Statistics : "Traces\n PaymentSucceeded"
+Catalog <-- AI : Provides Photo Analysis
+
+
+
+@enduml
+
+

@@ -11,10 +11,12 @@ import java.util.logging.Logger;
  */
 public class Livre {
 
+    //@todo : le compteur sert à différencier les exemplaires d'un même livre
+    //Il n'est pas à sa place ici...
 	private String titre;
 	private String[] auteurs;
 	private String isbn;
-	private String identifiant;
+	private String idDansBiblio;
 	private boolean estEmprunte;
 
 	private static final int DEFAULT_COMPTEUR = 0;
@@ -24,6 +26,7 @@ public class Livre {
 	static {
 		logger.setLevel(Level.OFF);
 	}
+
 	public Livre() {
 		this(null, null, null,DEFAULT_COMPTEUR);
 	}
@@ -31,8 +34,6 @@ public class Livre {
 	public Livre(String titre, String[] auteurs, String isbn){
 		this(titre, auteurs, isbn, DEFAULT_COMPTEUR);
 	}
-
-
 
 	public Livre(String titre, String[] auteurs, String isbn, int compteur) {
 
@@ -56,14 +57,14 @@ public class Livre {
 		for (String mot : mots) {
 			titreCourt.append(mot.charAt(0));
 		}
-		identifiant = titreCourt + "-" + compteur;
+		idDansBiblio = titreCourt + "-" + compteur;
 	}
 
 	//On force la création d'un livre avec un titre et identifiant donné.
 	//Cela facilitera les tests.
 	public static Livre createLivre(String titre,  String identifiant) {
 		Livre livre = new Livre(titre);
-		livre.identifiant = identifiant;
+		livre.idDansBiblio = identifiant;
 		return livre;
 	}
 
@@ -128,29 +129,39 @@ public class Livre {
 		this.estEmprunte = estEmprunte;
 	}
 
-	public String getIdentifiant() {
-		return this.identifiant;
+	public String getIdDansBiblio() {
+		return this.idDansBiblio;
 	}
 
+	public boolean estUnExemplaireDuMemeLivre(Livre l) {
+		if (l == null) {
+			return false;
+		}
+		return extraitTitreCourt(this.idDansBiblio).equals(extraitTitreCourt(l.idDansBiblio));
+	}
+
+	private String extraitTitreCourt(String idDansBiblio) {
+		return idDansBiblio.split("-")[0];
+	}
 
 	/**
 	 * Deux livres sont égaux si ils ont le même identifiant,
 	 * c'est à dire le même titre et le même compteur,
 	 * donc qu'il s'agit du même exemplaire.
 	 * @param o
-	 * @return
+	 * @return true si les deux livres sont égaux
 	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Livre livre = (Livre) o;
-		return Objects.equals(identifiant, livre.identifiant);
+		return Objects.equals(idDansBiblio, livre.idDansBiblio);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(identifiant);
+		return Objects.hashCode(idDansBiblio);
 	}
 
 	@Override
@@ -159,7 +170,7 @@ public class Livre {
 				"'" + titre + '\'' +
 				", de " + Arrays.toString(auteurs) +
 				", isbn='" + isbn + '\'' +
-				", identifiant='" + identifiant + '\'' +
+				", idDansBiblio='" + idDansBiblio + '\'' +
 				", estEmprunte=" + estEmprunte +
 				'}';
 	}

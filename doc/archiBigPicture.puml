@@ -1,0 +1,183 @@
+@startuml
+
+
+class  api.httphandlers.GlobalExceptionHandler {
+}
+
+class  api.httphandlers.LibraryHttpHandler {
++ void handle(HttpExchange)
++ void askToBorrowBook(HttpExchange,String,ResponseSender)
++ void askToCreateBook(HttpExchange,ResponseSender)
++ void answerWithBook(HttpExchange,String,ResponseSender)
++ void answerWithAllBooks(HttpExchange,ResponseSender)
+}
+
+
+api.httphandlers.LibraryHttpHandler --> "1\n bibliotheque" services.Bibliotheque
+api.httphandlers.LibraryHttpHandler --> "1\n studentRegistry" services.StudentRegistry
+api.httphandlers.LibraryHttpHandler -->  "1\n apiRegistry"  api.ApiRegistry
+
+class  services.StudentRegistry {
++ List<Etudiant> findAll()
++ Optional<Etudiant> findByName(String)
++ Optional<Etudiant> findByNumber(int)
++ void addStudent(String,int)
++ void removeStudent(int)
++ void updateStudent(int,String)
+}
+
+services.StudentRegistry --> "1\n studentRepository" repositories.StudentRepository
+class  apps.SimpleHttpServer4Library {
++ {static} void main(String[])
++ {static} int findFreePortFrom(int)
++ {static} HttpServer startServer(int,Bibliotheque,StudentRegistry)
++ {static} void stopServer(int)
++ {static} boolean isRunning(int)
++ {static} HttpServer getServer(int)
+}
+
+SimpleHttpServer4Library ..> "1\n /api/books" api.httphandlers.LibraryHttpHandler
+SimpleHttpServer4Library ..> "1\n /api/members" api.httphandlers.MembersHttpHandler
+
+
+
+class  api.HttpUtils {
+}
+class  repositories.StudentRepository {
++ void save(Etudiant,Integer)
++ Optional<Etudiant> findByName(String)
+}
+repositories.StudentRepository ...> "* \storage" entities.Etudiant
+
+class  api.ApiRegistry {
++ void registerRoute(String,String,RouteHandler)
++ void dispatch(HttpExchange)
+}
+
+class  api.ApiRegistry$RouteEntry {
++ Pattern pattern()
++ List<String> paramNames()
++ RouteHandler handler()
+}
+
+interface  repositories.Repository {
+}
+
+class  services.ResourceNotFoundException {
+}
+class  entities.Etudiant {
++ String getName()
++ void setName(String)
++ int getStudentNumber()
++ void setStudentNumber(int)
++ Collection<Emprunt> getEmprunts()
++ int getNombreDEmprunts()
++ void addEmprunt(Emprunt)
++ void removeEmprunt(Emprunt)
++ Emprunt getEmpruntFor(String)
++ String toString()
+}
+ entities.Etudiant "1\n emprunteur"<--->  "1..* \n emprunts"  entities.Emprunt 
+
+ entities.Emprunt --->  "1\n livreEmprunte"  entities.Livre
+class  api.JaxsonUtils {
++ {static} String toJson(Object)
++ {static} T fromJson(String,Class<T>)
+}
+
+class  repositories.BookRepository {
++ void save(Livre)
++ List<Livre> getBooksByTitle(String)
++ Livre getBookByLibraryId(String)
+}
+repositories.BookRepository ...> "* \storage" entities.Livre
+
+class  api.httphandlers.MembersHttpHandler {
++ void handle(com.sun.net.httpserver.HttpExchange)
+}
+api.httphandlers.MembersHttpHandler --> "1\n studentRegistry" services.StudentRegistry
+
+class  api.httphandlers.StudentNotFoundException {
+}
+class  api.dtos.StudentDTO {
++ int studentNumber()
+}
+
+interface  api.ResponseSender {
+}
+class  repositories.BasicRepositoryImpl {
++ long count()
++ void deleteAll()
++ void deleteById(ID)
++ boolean existsById(ID)
++ Iterable<T> findAll()
++ Optional<T> findById(ID)
++ void save(S,ID)
+}
+
+class  apps.SimpleHttpServer4Scolarity {
++ {static} void main(String[])
++ {static} int findFreePortFrom(int)
++ {static} HttpServer startServer(int)
++ {static} HttpServer startServer(int,StudentRegistry)
++ {static} void stopServer(int)
++ {static} boolean isRunning(int)
++ {static} HttpServer getServer(int)
+}
+
+class  entities.Livre {
++ {static} Livre createLivre(String,String)
++ String getTitre()
++ void setTitre(String)
++ String getIsbn()
++ void setIsbn(String)
++ String[] getAuteurs()
++ void setAuteurs(String)
++ boolean estEmprunte()
++ void setEstEmprunte(boolean)
++ String getIdDansBiblio()
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+
+class  services.Bibliotheque {
++ void addLivre(Livre)
++ List<Livre> getLivres()
++ Optional<Livre> getLivreDisponibleByTitle(String)
++ List<Livre> getLivresByTitle(String)
++ boolean emprunte(Etudiant,Livre)
++ Emprunt getEmpruntByLivre(Livre)
++ boolean rend(Livre)
++ List<Emprunt> getEmprunts()
++ Livre getLivreParBiblioId(String)
+}
+
+services.Bibliotheque --> "1\n bookRepository" repositories.BookRepository
+
+class  entities.Emprunt {
++ Livre getLivreEmprunte()
++ Etudiant getEmprunteur()
++ LocalDate getDateDeRetourMax()
++ boolean equals(Object)
++ int hashCode()
+}
+
+
+
+
+ repositories.BasicRepositoryImpl <|--  repositories.StudentRepository
+ api.ApiRegistry +..  api.ApiRegistry$RouteEntry
+ services.Exception <|--  services.ResourceNotFoundException
+
+ repositories.BasicRepositoryImpl <|--  repositories.BookRepository
+
+ api.httphandlers.Exception <|--  api.httphandlers.StudentNotFoundException
+ repositories.Repository <|..  repositories.BasicRepositoryImpl
+@enduml
+
+com.sun.net.httpserver.HttpHandler <|..  api.httphandlers.MembersHttpHandler
+com.sun.net.httpserver.HttpHandler <|..  api.httphandlers.LibraryHttpHandler
+
+top to bottom direction
+left to right direction
