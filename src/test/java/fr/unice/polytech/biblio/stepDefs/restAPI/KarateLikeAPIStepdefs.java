@@ -1,13 +1,13 @@
 package fr.unice.polytech.biblio.stepDefs.restAPI;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sun.net.httpserver.HttpServer;
+import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.entities.Livre;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Livre;
-import fr.unice.polytech.biblio.api.JaxsonUtils;
-import fr.unice.polytech.biblio.apps.SimpleHttpServer4Library;
-import fr.unice.polytech.biblio.apps.SimpleHttpServer4Scolarity;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,98 +17,25 @@ import java.net.http.HttpResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/***********
- * Ces tests ne sont pas protégés d'un usage des ports par un autre serveur !
-************** */
-
 public class KarateLikeAPIStepdefs {
-
-    // TODO: refactor this class to use the same setup as APIStepdefs.java
-
-    static HttpServer scolarity;
-    static HttpServer library;
-
-    static StudentRegistry studentRegistry = new StudentRegistry();
-    static Bibliotheque biblio = new Bibliotheque();
 
     static Logger logger = Logger.getLogger("KarateLikeAPITesting");
     {
         logger.setLevel(Level.FINE);
     }
 
-    /*-----------------------------------
-    Background:
-      * libraryPort = 8004
-      * scolarityPort = 8005
-      * urlbase 'http://localhost'
-      * url4library = urlbase + ':' + libraryPort + '/api/library'
-     --------------------------------------- */
+    private static String url4library;
+    StudentRegistry studentRegistry;
+    Bibliotheque biblio;
 
-    private int PORT4LIBRARY;
-    private int PORT4SCOLARITY;
-    private String urlbase;
-    private String url4library;
-
-
-/*
-    @AfterEach
-    public void teardown() {
-        // Arrêter le serveur après les tests
-        logger.info("KARATE : J arrete le serveur");
-        SimpleHttpServer4Library.stopServer(PORT4LIBRARY);
-        SimpleHttpServer4Scolarity.stopServer(PORT4SCOLARITY);
-    }
-*/
-
-
-    @Given("libraryPort = {int}")
-    public void library_port(Integer port) {
-        PORT4LIBRARY = port;
-    }
-
-    @Given("scolarityPort = {int}")
-    public void scolarity_port(Integer port) {
-        PORT4SCOLARITY = port;
-    }
-
-    @Given("urlbase {string}")
-    public void urlbase(String base) {
-        urlbase = base;
-    }
-
-    @Given("url4library = urlbase + {string} + libraryPort + {string}")
-    public void url4library_urlbase_library_port(String intermediaire, String complement) throws IOException {
-        logger.info("K-Given: url4library urlbase " + intermediaire + " libraryPort " + complement);
-        url4library = urlbase + intermediaire + PORT4LIBRARY + complement;
-        //logger.info("KARATE : url4library = " + url4library);
-        logger.info("============== Starting servers if needed ===============");
-        if (SimpleHttpServer4Scolarity.isRunning(PORT4SCOLARITY)) {
-            logger.info("====> K - Scolarity already started");
-            scolarity = SimpleHttpServer4Scolarity.getServer(PORT4SCOLARITY);
-        } else {
-            logger.info("====> K - Starting Scolarity");
-            scolarity = SimpleHttpServer4Scolarity.startServer(PORT4SCOLARITY, studentRegistry);
-            System.out.println("-------------> KARATE : Scolarity started");
-
-        }
-        if (SimpleHttpServer4Library.isRunning(PORT4LIBRARY)) {
-            logger.info("====> L - Library already started");
-            library = SimpleHttpServer4Library.getServer(PORT4LIBRARY);
-        }
-        else {
-            logger.info("====> L - Starting Library");
-            library = SimpleHttpServer4Library.startServer(PORT4LIBRARY, biblio, studentRegistry);
-            System.out.println("-------------> KARATE : Library started");
-
-        }
-        logger.info("End - K-Given : servers started");
+    @Given("the Karate setup is done, servers are configured and started")
+    public void theTestServersAreConfiguredAndStarted() {
+        url4library = TestContext.getBASE_URL4LIBRARY();
+        studentRegistry = TestContext.getStudentRegistry();
+        biblio = TestContext.getBiblio();
     }
 
     /*
@@ -183,7 +110,7 @@ public class KarateLikeAPIStepdefs {
      * {"titre":"Java","auteurs":["Gosling","Holmes"],"isbn":"2000","identifiant":"J-1"}
      */
 
-    @Given("url4library+ {string}")
+    @Given("url url4library+ {string}")
     public void url4library(String complement) {
         url = url4library + complement;
         uri = URI.create(url);

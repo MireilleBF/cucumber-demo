@@ -3,9 +3,9 @@ package fr.unice.polytech.biblio.api.httphandlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import fr.unice.polytech.biblio.api.HttpUtils;
-import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
+import fr.unice.polytech.biblio.entities.Etudiant;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,18 +56,16 @@ public class MembersHttpHandler implements HttpHandler {
      * pour la gestion des membres, pour garder le code simple et surtout "transparent"
      */
     @Override
-    public void handle(com.sun.net.httpserver.HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) throws IOException {
         logger.log(java.util.logging.Level.FINE, "MembersHandler called");
-
 
         // CORS
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*"); // Remplacez par votre origine cliente
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Accept, X-Requested-With, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization");
 
-
         String method = exchange.getRequestMethod();
-        try {
+        GlobalExceptionHandler.callWithGlobalExceptionHandling(exchange, () -> {
             switch (method) {
                 case "GET":
                     logger.log(java.util.logging.Level.FINE, "GET method called");
@@ -94,20 +92,18 @@ public class MembersHttpHandler implements HttpHandler {
                     break;
                 case "OPTIONS":
                     //for CORS preflight
-                    exchange.sendResponseHeaders(200, -1);
+                    exchange.sendResponseHeaders(HttpUtils.OK, -1);
                     break;
                 default:
                     logger.log(java.util.logging.Level.FINE, "Method not supported");
                     break;
             }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error while processing the request", e);
-            GlobalExceptionHandler.handleException(exchange, e);
-        }
+            return null;
+        });
     }
 
     //No need to return a response for DELETE (204)
-    private void askToDeleteMember(HttpExchange exchange) throws IOException {
+    private void askToDeleteMember(HttpExchange exchange) throws Exception {
         String id = exchange.getRequestURI().getPath().substring("/api/members/".length());
         studentRegistry.removeStudent(Integer.parseInt(id));
         exchange.sendResponseHeaders(204, 0);
@@ -134,13 +130,13 @@ public class MembersHttpHandler implements HttpHandler {
         String response = "Member updated successfully.";
         //send the response to the client
         exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
-        exchange.sendResponseHeaders(200, response.getBytes().length);
+        exchange.sendResponseHeaders(HttpUtils.OK, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
     }
 
-    private void askToCreateMember(HttpExchange exchange) throws IOException {
+    private void askToCreateMember(HttpExchange exchange) throws Exception {
         //get the request body, it contains the new member to add as a JSON string
         InputStream is = exchange.getRequestBody();
         String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
@@ -159,7 +155,7 @@ public class MembersHttpHandler implements HttpHandler {
         String response = "Member added successfully.";
         //send the response to the client
         exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
-        exchange.sendResponseHeaders(201, response.getBytes().length);
+        exchange.sendResponseHeaders(HttpUtils.CREATED, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
@@ -168,13 +164,13 @@ public class MembersHttpHandler implements HttpHandler {
     private void answerWithMember(HttpExchange exchange, String id) throws IOException {
         Etudiant etudiant = studentRegistry.findByNumber(Integer.parseInt(id)).orElse(null);
         if (etudiant == null) {
-            exchange.sendResponseHeaders(404, 0);
+            exchange.sendResponseHeaders(HttpUtils.RESOURCE_NOT_FOUND, 0);
             exchange.getResponseBody().close();
 
         } else {
-            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.APPLICATION_JSON);
             String response = JaxsonUtils.toJson(etudiant);
-            exchange.sendResponseHeaders(200, response.length());
+            exchange.sendResponseHeaders(HttpUtils.OK, response.length());
             exchange.getResponseBody().write(response.getBytes());
             exchange.getResponseBody().close();
         }
@@ -189,8 +185,8 @@ public class MembersHttpHandler implements HttpHandler {
             response.append(etudiant.toString()).append("\n");
         }
         //send the response to the client
-        exchange.getResponseHeaders().set("Content-Type", "text/plain");
-        exchange.sendResponseHeaders(200, response.length());
+        exchange.getResponseHeaders().set(HttpUtils.CONTENT_TYPE, HttpUtils.TEXT_PLAIN);
+        exchange.sendResponseHeaders(HttpUtils.OK, response.length());
         exchange.getResponseBody().write(response.toString().getBytes());
         exchange.getResponseBody().close();
     }

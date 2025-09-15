@@ -1,10 +1,11 @@
 package fr.unice.polytech.biblio.stepDefs.backend;
 
-import fr.unice.polytech.biblio.services.Bibliotheque;
-import fr.unice.polytech.biblio.services.BookNotFoundException;
-import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.entities.Livre;
+import fr.unice.polytech.biblio.services.Bibliotheque;
+import fr.unice.polytech.biblio.services.StudentRegistry;
+import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
 import io.cucumber.java.fr.Alors;
 import io.cucumber.java.fr.Etantdonné;
 import io.cucumber.java.fr.Etantdonnéque;
@@ -44,8 +45,9 @@ public class BibliothequeStepdefs {
     }
 
     @Quand("la scolarité ajoute un étudiant {string} avec le numéro d'étudiant {int}")
-    public void laScolariteAjouteUnEtudiantAvecLeNumeroDEtudiant(String nom, int ident) {
-        studentRegistry.addStudent(nom, ident);
+    public void laScolariteAjouteUnEtudiantAvecLeNumeroDEtudiant(String nom, int ident)
+            throws ResourceAlreadyExistsException {
+        studentRegistry.updateStudent(ident,nom);
     }
 
     @Etantdonnéque("la base ne contient pas d'étudiant {string} avec le numéro d'étudiant {int}")
@@ -56,8 +58,9 @@ public class BibliothequeStepdefs {
     Etudiant etudiantCourant;
 
     @Etantdonnéque("la base contient un étudiant {string} avec le numéro d'étudiant {int}")
-    public void laBasedoitContenirUnEtudiantAvecLeNumeroDEtudiant(String nom, int ident) {
-        studentRegistry.addStudent(nom, ident);
+    public void laBasedoitContenirUnEtudiantAvecLeNumeroDEtudiant(String nom, int ident)
+            throws ResourceAlreadyExistsException {
+        studentRegistry.updateStudent(ident,nom);
     }
 
     @Quand("la scolarité cherche un étudiant avec le numéro d'étudiant {int}")
@@ -99,7 +102,7 @@ public class BibliothequeStepdefs {
     public void le_lecteur_cherche_le_livre_avec_l_id_u(Integer int1) {
         try {
             bibliotheque.getLivreParBiblioId("U-" + int1);
-        } catch (BookNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             exception = e;
         }
     }

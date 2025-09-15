@@ -1,14 +1,15 @@
 package fr.unice.polytech.biblio.apps;
 
+import fr.unice.polytech.biblio.api.HttpUtils;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.api.dtos.StudentDTO;
+import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.services.Bibliotheque;
 import fr.unice.polytech.biblio.services.StudentRegistry;
-import fr.unice.polytech.biblio.entities.Etudiant;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.*;
 class IntegrationOfScolarityTest {
 
     private static final int PORT = 8003;
-    private static final String BASE_URL = "http://localhost:" + PORT + "/api/library";
+    private static final String BASE_URL = "http://localhost:" + PORT + "/api/books";
 
     StudentRegistry studentRegistry;
     Bibliotheque biblio;
@@ -76,9 +77,8 @@ class IntegrationOfScolarityTest {
                         .build(),
                 HttpResponse.BodyHandlers.ofString());
 
-        String jsonMimeType = "text/plain";
-        assertEquals(201, response.statusCode());
-        assertEquals(jsonMimeType, response.headers().firstValue("Content-Type").orElse(""));
+        assertEquals(HttpUtils.CREATED, response.statusCode());
+        assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
         logger.log(Level.FINE, response.body());
 
         assertEquals("Book borrowed", response.body());

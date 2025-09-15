@@ -2,8 +2,12 @@ package fr.unice.polytech.biblio.services;
 
 import fr.unice.polytech.biblio.entities.Etudiant;
 import fr.unice.polytech.biblio.repositories.StudentRepository;
+import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
+import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 /*
@@ -15,40 +19,37 @@ public class StudentRegistry {
 
     private StudentRepository studentRepository = new StudentRepository();
 
-    //Map<Integer, Etudiant> students = new HashMap<>();
-
     public List<Etudiant> findAll() {
         List<Etudiant> students = new ArrayList<>();
         studentRepository.findAll().forEach(students::add);
         return students;
-        //return List.of(students.values().toArray(new Etudiant[0]));
     }
-
 
     public Optional<Etudiant> findByName(String name) {
         return studentRepository.findByName(name);
     }
 
-
     public Optional<Etudiant> findByNumber(int studentNumber) {
         return studentRepository.findById(studentNumber);
-        //return Optional.ofNullable(students.get(studentNumber));
     }
 
-
-    public void addStudent(String name, int studentNumber) {
+    public void addStudent(String name, int studentNumber) throws ResourceAlreadyExistsException {
+        if (studentRepository.findById(studentNumber).isPresent()) {
+            throw new ResourceAlreadyExistsException("Student with number " + studentNumber + " already exists");
+        }
         Etudiant student = new Etudiant();
         student.setName(name);
         student.setStudentNumber(studentNumber);
         studentRepository.save(student, studentNumber);
-        //students.put(studentNumber, student);
     }
 
-    public void removeStudent(int studentNumber) {
-        studentRepository.deleteById(studentNumber);
-        //students.remove(studentNumber);
+    public void removeStudent(int studentNumber) throws ResourceNotFoundException {
+        if (studentRepository.findById(studentNumber).isPresent()) {
+            studentRepository.deleteById(studentNumber);
+        } else {
+            throw new ResourceNotFoundException("Student with number " + studentNumber + " not found");
+        }
     }
-
 
     public void updateStudent(int studentNumber, String name) {
         if (studentRepository.findById(studentNumber).isPresent()) {

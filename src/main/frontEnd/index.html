@@ -17,7 +17,7 @@
 <button onclick="borrow()">Réserver un livre</button>
 
 <script>
-    const urlStandard = "http://localhost:"+ 8000 + "/api/library";
+    const urlStandard = "http://localhost:"+ 8000 + "/api/books";
 
     function getLivres() {
         const url = urlStandard;
@@ -25,7 +25,7 @@
         fetch(url)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erreur du serveur');
+                    throw new Error('Erreur du serveur - status=' + response.status);
                 }
                 return response.text();
             })

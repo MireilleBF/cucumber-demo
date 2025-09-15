@@ -30,7 +30,7 @@
         console.log('Emprunt d\'un livre');
         const bookId = document.getElementById('bookId').value;
         const studentId = document.getElementById('studentId').value;
-        const url = "http://localhost:"+ 8000 + "/api/library/" + bookId +"/borrow" ;
+        const url = "http://localhost:"+ 8000 + "/api/books/" + bookId +"/borrow" ;
 
         <!-- construire le body de la requete -->
         const body = JSON.stringify({
@@ -46,7 +46,7 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Erreur du serveur');
+                    throw new Error('Erreur du serveur - status=' + response.status);
                 }
                 return response.text();
             })

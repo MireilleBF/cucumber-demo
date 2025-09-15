@@ -1,5 +1,6 @@
 package fr.unice.polytech.biblio.apps;
 
+import fr.unice.polytech.biblio.api.HttpUtils;
 import fr.unice.polytech.biblio.api.JaxsonUtils;
 import fr.unice.polytech.biblio.entities.Etudiant;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +13,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MembersHttpHandlerTest {
 
@@ -49,9 +51,8 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String textMimeType = "text/plain";
-                assertEquals(200, response.statusCode());
-                assertEquals(textMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.OK, response.statusCode());
+                assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 assertTrue(response.body().contains("List of all members :"));
                 assertTrue(response.body().contains("John Doe"));
                 assertTrue(response.body().contains("Jane Doe"));
@@ -76,9 +77,8 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String returnMimeType = "application/json";
-                assertEquals(200, response.statusCode());
-                assertEquals(returnMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.OK, response.statusCode());
+                assertEquals(HttpUtils.APPLICATION_JSON, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 String json = response.body();
                 assertTrue(json.contains(expectedName));
                 assertTrue(json.contains(Integer.toString(studentNumber)));
@@ -98,9 +98,8 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String textMimeType = "text/plain";
-                assertEquals(201, response.statusCode());
-                assertEquals(textMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.CREATED, response.statusCode());
+                assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 assertTrue(response.body().contains("Member added successfully."));
 
                 // Now we test that the member has been added
@@ -120,9 +119,8 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                String textMimeType = "text/plain";
-                assertEquals(200, response.statusCode());
-                assertEquals(textMimeType, response.headers().firstValue("Content-Type").orElse(""));
+                assertEquals(HttpUtils.OK, response.statusCode());
+                assertEquals(HttpUtils.TEXT_PLAIN, response.headers().firstValue(HttpUtils.CONTENT_TYPE).orElse(""));
                 assertTrue(response.body().contains("Member updated successfully."));
 
                 // Now we test that the member has been updated
@@ -141,7 +139,7 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                assertEquals(204, response.statusCode());
+                assertEquals(HttpUtils.NO_CONTENT, response.statusCode());
 
                 // Now we test that the member has been deleted
                 // Build the request
@@ -153,6 +151,6 @@ class MembersHttpHandlerTest {
                                                 .build(),
                                 HttpResponse.BodyHandlers.ofString());
 
-                assertEquals(404, response.statusCode());
+                assertEquals(HttpUtils.RESOURCE_NOT_FOUND, response.statusCode());
         }
 }

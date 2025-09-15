@@ -133,6 +133,16 @@ public class Livre {
 		return this.idDansBiblio;
 	}
 
+	public boolean estUnExemplaireDuMemeLivre(Livre l) {
+		if (l == null) {
+			return false;
+		}
+		return extraitTitreCourt(this.idDansBiblio).equals(extraitTitreCourt(l.idDansBiblio));
+	}
+
+	private String extraitTitreCourt(String idDansBiblio) {
+		return idDansBiblio.split("-")[0];
+	}
 
 	/**
 	 * Deux livres sont égaux si ils ont le même identifiant,

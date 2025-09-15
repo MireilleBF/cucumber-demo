@@ -1,8 +1,9 @@
 package fr.unice.polytech.biblio.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.biblio.services.Bibliotheque;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Ph. Collet
@@ -18,11 +19,6 @@ public class Etudiant {
 	private String nom;
 	@JsonProperty("studentNumber")
 	private int noEtudiant;
-
-	// Les emprunts courants
-	// Ils ne doivent pas être sérialisés
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Collection<Emprunt> emprunts = new ArrayList<>();
 
 
 	public String getName() {
@@ -42,25 +38,13 @@ public class Etudiant {
 		this.noEtudiant = noEtudiant;
 	}
 
-	public Collection<Emprunt> getEmprunts() {
-		return Collections.unmodifiableCollection(emprunts);
-	}
-
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	public int getNombreDEmprunts() {
-		return emprunts.size();
-	}
-	public void addEmprunt(Emprunt emprunt) {
-		emprunts.add(emprunt);
-	}
-
-	public void removeEmprunt(Emprunt emprunt) {
-		emprunts.remove(emprunt);
+	public Collection<Emprunt> getEmprunts(Bibliotheque bibliotheque) {
+		return bibliotheque.getEmpruntsByStudent(this);
 	}
 
 	//On considére qu'un seul exemplaire d'un livre peut etre emprunté par un étudiant
-	public Emprunt getEmpruntFor(String livreTitre){
-		return emprunts.stream().filter(e -> e.getLivreEmprunte().getTitre().equals(livreTitre)).findFirst().orElse(null);
+	public Emprunt getEmpruntFor(String livreTitre, Bibliotheque bibliotheque) {
+		return getEmprunts(bibliotheque).stream().filter(e -> e.getLivreEmprunte().getTitre().equals(livreTitre)).findFirst().orElse(null);
 	}
 
 	@Override
@@ -68,7 +52,6 @@ public class Etudiant {
 		return "Etudiant{" +
 				"nom='" + nom + '\'' +
 				", noEtudiant=" + noEtudiant +
-				", Number of emprunts=" + emprunts.size() +
 				'}';
 	}
 }

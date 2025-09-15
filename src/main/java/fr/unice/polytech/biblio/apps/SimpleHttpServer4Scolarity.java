@@ -1,8 +1,8 @@
 package fr.unice.polytech.biblio.apps;
 
 import com.sun.net.httpserver.HttpServer;
-import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.api.httphandlers.MembersHttpHandler;
+import fr.unice.polytech.biblio.services.StudentRegistry;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
