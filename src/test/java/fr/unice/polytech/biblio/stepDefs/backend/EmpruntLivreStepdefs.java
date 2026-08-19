@@ -7,6 +7,8 @@ import fr.unice.polytech.biblio.services.StudentRegistry;
 import fr.unice.polytech.biblio.services.exceptions.BookAlreadyBorrowedException;
 import fr.unice.polytech.biblio.services.exceptions.ResourceAlreadyExistsException;
 import fr.unice.polytech.biblio.services.exceptions.ResourceNotFoundException;
+import io.cucumber.java.PendingException;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.fr.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -138,4 +140,5 @@ public class EmpruntLivreStepdefs {
     public void leLivreDIdEstDisponible(String idLivre) throws ResourceNotFoundException {
         assertFalse(biblio.getLivreParBiblioId(idLivre).estEmprunte());
     }
+
 }
