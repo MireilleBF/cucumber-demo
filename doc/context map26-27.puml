@@ -1,0 +1,253 @@
+@startuml
+'!theme spacelab
+left to right direction
+
+title STEats - Context Map
+
+'=========================================================
+' Core Bounded Contexts (implemented by students)
+'=========================================================
+
+package "Catalog & Menu\nManagement" as Catalog #A9DCDF {
+}
+Note bottom of Catalog
+  Managing the restaurant catalog,
+  including menus, dishes, and capacities.
+  (Must implement validation/guardrails
+    for AI-generated dish descriptions).
+end note
+
+package "Ordering" as Ordering #A9DCDF {
+}
+Note bottom of Ordering
+  Managing the ordering process,
+  including order creation
+  and registered users.
+end note
+
+package "Banking (mocked)" as Banking #F9E79F {
+}
+Note bottom of Banking
+  Mocked banking service
+  for payment processing.
+end note
+
+'=========================================================
+' Supporting Context
+'=========================================================
+
+package "Statistics" as Statistics #DDDDDD {
+}
+Note bottom of Statistics
+    Collecting and analyzing statistics
+    related to orders, payments, and deliveries.
+end note
+
+'=========================================================
+' External Contexts
+'=========================================================
+
+package "Delivery" as Delivery #C6EBC5 {
+}
+Note bottom of Delivery
+  External service responsible for
+  handling food deliveries and providing
+  delivery status and tracking information.
+end note
+
+package "Identity & Access" as Identity #F6B3B3 {
+}
+
+package "AI Service\n(mocked)" as AI #F9E79F {
+}
+Note bottom of AI
+    External AI service:
+        generates dish descriptions
+        from uploaded photos.
+        (Prone to hallucinations -> requires
+        human-in-the-loop validation).
+end note
+
+
+'=========================================================
+' Relationships between contexts
+'=========================================================
+
+Ordering --> Catalog
+Ordering --> Banking
+Ordering --> Delivery
+
+Catalog --> AI
+
+
+
+' Statistics are fed by business contexts (Event-driven or data sync)
+Statistics <.. Catalog
+Statistics <.. Ordering
+
+
+legend right
+
+|= Color |= Meaning |
+|<#A9DCDF>| Core bounded context (implemented by students) |
+|<#C6EBC5>| External bounded context (cf. PS7 or Mocked) |
+|<#F6B3B3>| Optional security context (cf. Module Security) |
+|<#F9E79F>| Mocked external service |
+|<#DDDDDD>| Supporting context (implemented by students) |
+
+----
+
+Arrow meaning
+
+A --> B : A collaborates with B.
+A <.. B : A feeds data to B (or B reports on A).
+
+The interaction mechanism
+(API, events, messaging, ...)
+is intentionally left unspecified.
+
+endlegend
+
+@enduml
+
+
+Ordering --> Identity
+Catalog --> Identity
+
+
+
+
+
+
+
+
+
+
+
+
+@startuml
+'!theme spacelab
+left to right direction
+
+title STEats - Context Map
+
+'=========================================================
+' Core Bounded Contexts (implemented by students)
+'=========================================================
+
+package "Catalog & Menu\nManagement" as Catalog #A9DCDF {
+}
+Note right of Catalog
+  Managing the restaurant catalog,
+  including menus, dishes, and capacities.
+end note
+
+package "Ordering" as Ordering #A9DCDF {
+}
+Note bottom of Ordering
+  Managing the ordering process,
+  including order creation
+  and registered users.
+end note
+
+
+
+package "Banking (mocked)" as Banking #F9E79F {
+}
+Note bottom of Banking
+  Mocked banking service
+  for payment processing.
+end note
+
+'=========================================================
+' Supporting Context
+'=========================================================
+
+package "Statistics" as Statistics #DDDDDD {
+}
+Note bottom of Statistics
+    Collecting and analyzing statistics
+    related to orders, payments, and deliveries.
+end note
+
+'=========================================================
+' External Contexts
+'=========================================================
+
+package "Delivery" as Delivery #C6EBC5 {
+}
+Note bottom of Delivery
+  Managing order deliveries based on :
+    - where to get the menus
+    - where to deliver the menus
+    - when to deliver
+    - who should ...
+    - returning a unique identifier
+   to get the status of the delivery
+end note
+
+package "Identity & Access" as Identity #F6B3B3 {
+}
+
+package "AI Service\n(mocked)" as AI #F9E79F {
+}
+Note bottom of AI
+    Analyzing photos of plated dishes
+    and providing plating suggestions.
+end note
+
+
+'=========================================================
+' Relationships between contexts
+'=========================================================
+
+Ordering --> Catalog
+
+Ordering --> Banking
+Ordering --> Delivery
+
+Catalog --> AI
+
+Ordering --> Identity
+Catalog --> Identity
+
+
+Catalog --> Statistics
+Ordering --> Statistics
+
+
+legend right
+
+|= Color |= Meaning |
+|<#A9DCDF>| Core bounded context (implemented by students) |
+|<#C6EBC5>| External bounded context (cf. PS7 or Mocked)) |
+|<#F6B3B3>| Optional security context (cf. Module Security) |
+|<#F9E79F>| Mocked external service |
+|<#DDDDDD>| Supporting context (implemented by students)|
+
+----
+
+Arrow meaning
+
+A --> B
+
+A collaborates with B.
+The interaction mechanism
+(API, events, messaging, ...)
+is intentionally left unspecified.
+
+endlegend
+
+@enduml
+
+'Payment --> Identity
+'Payment --> Statistics
+'Delivery --> Statistics
+'Ordering --> Payment
+
+'package "Payment" as Payment #A9DCDF {
+'}
+'Note right of Payment
+'  Managing payments,
+'  including payment processing and student credits.
+'end note
