@@ -75,7 +75,7 @@ class  entities.Etudiant {
 + void addEmprunt(Emprunt)
 + void removeEmprunt(Emprunt)
 + Emprunt getEmpruntFor(String)
-+ String toString()
++ ...
 }
  entities.Etudiant "1\n emprunteur"<--->  "1..* \n emprunts"  entities.Emprunt 
 
