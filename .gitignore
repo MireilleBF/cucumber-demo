@@ -50,3 +50,6 @@ fabric.properties
 *.vpp
 *.vpp.bak_*
 *.lck
+/doc/targetedArchi/
+/doc/c4/
+/doc/OLD/

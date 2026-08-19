@@ -28,32 +28,36 @@ package "Statistics Managment " as Statistics {
   '[Statistics]
 }
 
-package "AI" as AI #ADD1B2{
+package "AI" as AI #motivation{
  ' [Photo]
 }
 
-package "Identity & Access" as Identity {
+package "Identity & Access" as Identity #salmon{
+  '[User]
+  '[Role]
+  '[Permission]
 }
 
 ' Delivery / Logistics
-package "Deliverying" as Delivery {
+package "Deliverying" as Delivery #lightgreen {
 '  [Delivery]
 '  [Courier]
-'  [Delivery Slot]
 }
 
 ' Relations
 Identity --> Ordering : Authenticates \n Registered Users
-Ordering --> Delivery : Requests Delivery \n for Orders
-Delivery --> Statistics : Traces \n Delivery Performance Data
-
-
+Identity --> Catalog : Authenticates \n Registered Restaurant Owners
+Ordering --> Delivery : Requests Delivery for Orders \n and Delivery Status
+'Delivery --> Statistics : Traces \n Delivery Performance Data
+'Delivery --> Ordering : Provides \n Delivery Status
+'Ordering --> Delivery : Requests Delivery Status
 Catalog --> Ordering : Provides \n Menus & Capacities
 Ordering --> Paying : Provides Amount\n & Order State
 Paying --> Ordering : "Validates\n Payment Success"
-Ordering --> Statistics : "Traces\n OrderValidated"
+Ordering --> Statistics : "Traces\n OrderValidated \n & OrderDelivered"
+'Ordering --> Statistics : "Traces\n OrderDelivered"
 Paying --> Statistics : "Traces\n PaymentSucceeded"
-Catalog <-- AI : Provides Photo Analysis
+Catalog <-- AI : Provides Photo Analysis \n and Plating Suggestions
 
 
 
